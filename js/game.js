@@ -33,11 +33,15 @@ class Game{
 		//!REFACTOR better time thingy
 		if(this.tick == 20)
 		{
-			if(this.tetromino.y+2<20)
+			if(this.tetromino.y+this.tetromino.h_max < 20)
 				this.tetromino.y = this.tetromino.y +1;
+			else 
+			{
+				this.board.add_tetromino(this.tetromino,this.tetromino.x, this.tetromino.y);
+				this.tetromino.dead();
+			}
 			this.tick = 0;
 		}
-		// console.log(this.tetromino.is_dead);
 		
 		if(this.tetromino.is_dead)
 		{
@@ -45,16 +49,19 @@ class Game{
 			this.tetromino.set_new_shape();
 			this.tetromino.y = 0;
 		}
-		if(this.tetromino.colide(this.board.board_data))
+	/*	if(this.tetromino.colide(this.board.board_data))
 		{
 			this.board.add_tetromino(this.tetromino);
 			this.tetromino.dead();
-		}
+		}*/
+			
 		//Response for keys
-		if(key.left && this.tetromino.x > 0) 
-			this.tetromino.x = this.tetromino.x-1;
+			//
+			//also checking boundiers
+		if(key.left && this.tetromino.x + this.tetromino.min > 0) 
+				this.tetromino.x = this.tetromino.x-1;
 
-		if(key.right && this.tetromino.x+4 < 10) 
+		if(key.right && this.tetromino.x+this.tetromino.max+1 < 10) 
 			this.tetromino.x= this.tetromino.x+1;
 
 		if(key.up) 

@@ -1,6 +1,6 @@
 window.onload = () =>
 {
-	console.log("canvas loaded: game started");
+	console.info("canvas loaded: game started");
 
 	const canvas = document.getElementById('c');
 	const ctx = canvas.getContext('2d');
