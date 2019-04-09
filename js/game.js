@@ -33,36 +33,40 @@ class Game{
 		//!REFACTOR better time thingy
 		if(this.tick == 20)
 		{
-			if(this.tetromino.y+this.tetromino.h_max < 20)
-				this.tetromino.y = this.tetromino.y +1;
-			else 
+			this.tetromino.y = this.tetromino.y +1;
+			if(this.tetromino.collide(this.board.board_data))
 			{
+			  this.tetromino.y--;
 				this.board.add_tetromino(this.tetromino,this.tetromino.x, this.tetromino.y);
 				this.tetromino.dead();
 			}
 			this.tick = 0;
 		}
-		
+
+		//!REFACTOR temporary thing 
 		if(this.tetromino.is_dead)
 		{
 			this.tetromino.is_dead = false;
 			this.tetromino.set_new_shape();
 			this.tetromino.y = 0;
+			this.tetromino.x = this.board.cell_width/2-2;
 		}
-	/*	if(this.tetromino.colide(this.board.board_data))
-		{
-			this.board.add_tetromino(this.tetromino);
-			this.tetromino.dead();
-		}*/
 			
 		//Response for keys
-			//
-			//also checking boundiers
-		if(key.left && this.tetromino.x + this.tetromino.min > 0) 
+		//also checking boundiers
+		if(key.left && this.tetromino.x >= 0) 
+			{
 				this.tetromino.x = this.tetromino.x-1;
+				if(this.tetromino.collide(this.board.board_data))
+					this.tetromino.x +=1;
+			}
 
-		if(key.right && this.tetromino.x+this.tetromino.max+1 < 10) 
-			this.tetromino.x= this.tetromino.x+1;
+		if(key.right && this.tetromino.x <= 10) 
+			{
+				this.tetromino.x = this.tetromino.x+1;
+				if(this.tetromino.collide(this.board.board_data))
+					this.tetromino.x -=1;
+			}
 
 		if(key.up) 
 		{

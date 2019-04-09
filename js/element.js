@@ -121,49 +121,31 @@ class Element{
 	}
 
 	//baord.data
-	colide(board)
+	collide(board) 
 	{
-			let arr_len = this.data.length;
-			for(let i = 0; i < arr_len; i++)
-				for(let j = 0; j < arr_len; j++)
-				{
-					//this.data[i + 1][j];
-					/*
-						<- j->
-						_____
-						l l l gora dol i 
-						------
-					*/
-					if(this.y+i > 19) return true;
+		let al=this.data.length;
 
-						if(board[this.y+i][this.x+j] == 1)
-							{
-								return true;
-							}
-							return false;
+		for(let i = 0; i < al; i++)
+			for(let j = 0; j < al; j++)
+			{
+				if(this.data[i][j] && (board[this.y + i] && board[this.y +i][this.x+j]) !==0) 
+					return true;
+			}
 
-				}
-
-			return false;
+		return false;
 	}
-	
-	draw(ctx)
-	{
+
+	draw(ctx) 
+	{ 
 		for(let i = 0; i < this.data.length; i++)	
-			for(let j = 0; j< this.data[i].length; j++)
-				if(this.data[j][i] == 1)
-				{
-					//!REFACTOR matrix draw function
-					ctx.beginPath()
+			for(let j = 0; j< this.data[i].length; j++) 
+				if(this.data[j][i] == 1) { 
+					//!REFACTOR matrix draw function 
+					ctx.beginPath();
 					ctx.fillStyle = "green";
-					ctx.fillRect(
-						(this.x*this.width)+(this.width*i),
-						(this.y*this.width)+(this.width*j),
-						this.width,
-						this.width);				
+					ctx.fillRect( (this.x*this.width)+(this.width*i), (this.y*this.width)+(this.width*j), this.width, this.width);
 					ctx.closePath();
 				}
-		
 	}
 
 }

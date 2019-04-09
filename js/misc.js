@@ -5,7 +5,7 @@ class Misc
  static create_matrix(w,h)
 	{
 		let temp = new Array(h);
-		for(let i = 0; i < h; i++) temp[i] = new Array(w);
+		for(let i = 0; i < h; i++) temp[i] = new Array(w).fill(0);
 		return temp;
 	}
 

@@ -16,7 +16,7 @@ class Board
 
 		for(let i = 0; i<t_data.length; i++)
 			for(let j = 0; j<t_data[i].length; j++)
-				if(t_data[i][j]==1) 
+				if(t_data[i][j]!==0) 
 					this.data[tetromino.y+i][tetromino.x+j] = 1;
 	}
 
