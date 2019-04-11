@@ -37,7 +37,8 @@ class Game{
 			if(this.tetromino.collide(this.board.board_data))
 			{
 			  this.tetromino.y--;
-				this.board.add_tetromino(this.tetromino,this.tetromino.x, this.tetromino.y);
+				this.board.add_tetromino(this.tetromino);
+				this.board.check_rows();
 				this.tetromino.dead();
 			}
 			this.tick = 0;
@@ -50,18 +51,21 @@ class Game{
 			this.tetromino.set_new_shape();
 			this.tetromino.y = 0;
 			this.tetromino.x = this.board.cell_width/2-2;
+			if(this.tetromino.collide(this.board.board_data))
+				console.log("the game is over");
+
 		}
 			
 		//Response for keys
 		//also checking boundiers
-		if(key.left && this.tetromino.x >= 0) 
+		if(key.left) 
 			{
 				this.tetromino.x = this.tetromino.x-1;
 				if(this.tetromino.collide(this.board.board_data))
 					this.tetromino.x +=1;
 			}
 
-		if(key.right && this.tetromino.x <= 10) 
+		if(key.right) 
 			{
 				this.tetromino.x = this.tetromino.x+1;
 				if(this.tetromino.collide(this.board.board_data))
@@ -80,11 +84,9 @@ class Game{
 		
 		//render function
 		this.render(this.ctx);
-
 		this.tick++;
 
 		},500);
-
 	}
 
 

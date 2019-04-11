@@ -10,7 +10,7 @@ class Board
 
 	get board_data(){return this.data};
 
-	add_tetromino(tetromino,ox,oy)
+	add_tetromino(tetromino)
 	{
 		let t_data = tetromino.current_shape;
 
@@ -18,6 +18,19 @@ class Board
 			for(let j = 0; j<t_data[i].length; j++)
 				if(t_data[i][j]!==0) 
 					this.data[tetromino.y+i][tetromino.x+j] = 1;
+	}
+
+	check_rows()
+	{
+		check: for(let i = this.data.length-1; i > 0; i--)
+		{
+			for(let j = 0; j< this.data[i].length; j++)
+				if(this.data[i][j] === 0) 
+					continue check;
+
+			this.data.splice(i,1);
+			this.data.unshift([0,0,0,0,0,0,0,0,0,0]);
+		}
 	}
 
 	render(ctx)

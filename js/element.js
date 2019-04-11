@@ -15,20 +15,17 @@ class Element{
 		this._r = 0;
 		this.letters = ['I','J','L','O','S','Z','T'];
 		this.peaces = {
-			I:[[0,0,1,0],[0,0,1,0],[0,0,1,0],[0,0,1,0]],
+			I:[[0,1,0,0],[0,1,0,0],[0,1,0,0],[0,1,0,0]],
 			J:[[1,0,0],[1,1,1],[0,0,0]],
-			L:[[0,0,0],[1,1,1],[0,0,1]],
-			O:[[0,0,0,0],[0,1,1,0],[0,1,1,0],[0,0,0,0]],
+			L:[[0,0,0],[1,1,1],[1,0,0]],
+			O:[[1,1],[1,1]],
 			S:[[0,1,1],[1,1,0],[0,0,0]],
 			Z:[[1,1,0],[0,1,1],[0,0,0]],
 			T:[[0,1,0],[1,1,1],[0,0,0]]};
 		this.data;
 		this.history=['Z','Z','S','S'];
-		this.next_data;
+		this.current_letter;
 		this.set_new_shape();
-		this.min = this.check_min();
-		this.max = this.check_max();
-		this.h_max = this.check_h_max();
 		this.is_dead = false;
 	}
 
@@ -43,66 +40,37 @@ class Element{
 	set rotation(a){this._r=a}
 
 	dead(){this.is_dead = true;}
-
-	check_min()
+	update_history()
 	{
-		let temp;
-
-		for(let i = 0; i < this.data.length; i++)
-			for(let j = 0; j < this.data.length; j++)
-				if(temp == undefined && this.data[j][i] == 1)
-				{
-					temp =i;
-					break;
-				}
-
-		return temp;
-	}
-
-	check_max()
-	{
-		let temp;
-
-		for(let i = this.data.length -1; i > 0; i--)
-			for(let j = 0; j < this.data.length; j++)
-				if(temp == undefined && this.data[j][i] == 1)
-				{
-					temp =i;
-					break;
-				}
-
-			
-		 return temp;
-	}
-
-	check_h_max()
-	{
-		let temp;
-
-		for(let i = this.data.length -1; i > 0; i--)
-			for(let j = 0; j < this.data.length; j++)
-				if(this.data[i][j] == 1 && !temp)
-					temp=i+1;
-			
-		 return temp;
-	}
-
-//!IMPORTANT add rotation parameter or other solution needed
-	set_new_shape()
-	{
-		/*
-			historia 4 ostatnich figur
+		/* historia 4 ostatnich figur
 			the history begins with a Z,Z,S,S sequence.
 			as the first piece overwrites the first Z rather than 
 			pushing off the last S, 
-			this is effectively a Z,S,S,Z or Z,S,Z,S sequence.
 		*/
-		let rand_letter = Math.floor(Math.random()*7);
+		if(this.current_letter)
+		{
+			this.history.pop();
+			this.history.unshift(this.current_letter);
+		}
+	}
 
-		//while(this.last_data == this.peaces[this.letters[rand_letter]])
-				//rand_letter = Math.floor(Math.random()*7);
+	set_new_shape()
+	{
+		this.update_history();
 
-		this.data = this.peaces[this.letters[rand_letter]];
+		let rand; 
+		let res = true;
+		while(res)
+		{
+			rand =  Math.floor(Math.random()*7);
+			res = false
+
+			for (let letter of this.history)
+				if(letter === this.letters[rand]) res = true;
+		}
+
+		this.data = this.peaces[this.letters[rand]];
+		this.current_letter =this.letters[rand];
 	}
 
 
@@ -111,14 +79,7 @@ class Element{
 		let temp = this.data;
 		this.data = Misc.rotate_matrix(this.data);
 		if(this.x<0) this.data = temp;
-		//if something is wrong with tetromino and right boundry of the board
-		//this line is for this responsible
-		if(this.x+this.check_max()>9) this.data = temp;
-
-		this.min =this.check_min();
-		this.max =this.check_max();
-		this.h_max =this.check_h_max();
-	}
+}
 
 	//baord.data
 	collide(board) 
@@ -127,10 +88,8 @@ class Element{
 
 		for(let i = 0; i < al; i++)
 			for(let j = 0; j < al; j++)
-			{
 				if(this.data[i][j] && (board[this.y + i] && board[this.y +i][this.x+j]) !==0) 
 					return true;
-			}
 
 		return false;
 	}
