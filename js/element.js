@@ -40,6 +40,22 @@ class Element{
 	set rotation(a){this._r=a}
 
 	dead(){this.is_dead = true;}
+
+	check_max()
+	{
+		let temp;
+
+		for(let i = this.data.length -1; i > 0; i--)
+			for(let j = 0; j < this.data.length; j++)
+				if(temp == undefined && this.data[j][i] == 1)
+				{
+					temp =i;
+					break;
+				}
+
+		 return temp;
+	}
+
 	update_history()
 	{
 		/* historia 4 ostatnich figur
@@ -79,6 +95,7 @@ class Element{
 		let temp = this.data;
 		this.data = Misc.rotate_matrix(this.data);
 		if(this.x<0) this.data = temp;
+		if(this.x+this.check_max()>9) this.data = temp;
 }
 
 	//baord.data

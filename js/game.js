@@ -15,14 +15,13 @@ class Game{
 	{
 		//drawing background
 		ctx.clearRect(0,0,this.WIDTH,this.HEIGHT);
-		ctx.fillStyle='gray';
+		ctx.fillStyle='#5b6856';
 		ctx.strokeStyle = 'black';
 		ctx.fillRect(0,0, this.WIDTH, this.HEIGHT);
 	
 		//drawing other things
 		this.board.render(ctx);
 		this.tetromino.draw(ctx);
-
 	}
 
 	update()
