@@ -1,7 +1,10 @@
-/*#c{
-	width:200px;
-	height:400px;	
-}*/
+#c{
+/*	width:200px;
+	height:400px;	*/
+	border:2px solid black;
+	border-left:none;
+}
+
 body{
 	background-color: darkgrey;
 }

@@ -8,16 +8,17 @@ class Board
 		this.data = Misc.create_matrix(this.cell_width, this.cell_height);
 	}
 
-	get board_data(){return this.data};
+	get current_board(){return this.data};
 
 	add_tetromino(tetromino)
 	{
+		//tetromino data
 		let t_data = tetromino.current_shape;
 
 		for(let i = 0; i<t_data.length; i++)
 			for(let j = 0; j<t_data[i].length; j++)
 				if(t_data[i][j]!==0) 
-					this.data[tetromino.y+i][tetromino.x+j] = 1;
+					this.current_board[tetromino.y+i][tetromino.x+j] = 1;
 	}
 
 	check_rows()
@@ -28,15 +29,16 @@ class Board
 				if(this.data[i][j] === 0) 
 					continue check;
 
-			this.data.splice(i,1);
-			this.data.unshift([0,0,0,0,0,0,0,0,0,0]);
+			this.current_board.splice(i,1);
+			this.current_board.unshift([0,0,0,0,0,0,0,0,0,0]);
+			i++;
 		}
 	}
 
 	render(ctx)
 	{
 		//white stripes 
-		for(let i = 0; i < this.cell_width; i++)
+		/*for(let i = 0; i < this.cell_width; i++)
 		{
 			ctx.beginPath();
 			ctx.strokeStyle = 'white';	
@@ -55,15 +57,15 @@ class Board
 			ctx.stroke();
 			ctx.closePath();
 		}
-
-		this.data.forEach((elem,y) =>{
+		*/
+		this.current_board.forEach((elem,y) =>{
 			elem.forEach((sub_elem,x)=>
 			{
 				if(sub_elem == 1)
 				{
 					ctx.beginPath();
 					ctx.fillStyle = "green";
-					ctx.fillRect(x*20, y*20,20,20);	
+					ctx.fillRect(x*20+1, y*20+1,19,19);	
 					ctx.closePath();
 				}
 			});

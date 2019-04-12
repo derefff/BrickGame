@@ -8,7 +8,8 @@ class Game{
 		this.tetromino = new Element(this.board.cell_width/2-2,0,20);
 
 		this.up_key_flag = false;
-		this.tick=0;
+		this.tick = 0;
+		this.MAX_TICK = 20;	
 	}
 
 	render(ctx)
@@ -29,13 +30,12 @@ class Game{
 		//time delay
 		setTimeout(()=>{
 
-		//!REFACTOR better time thingy
-		if(this.tick == 20)
+		if(this.tick == this.MAX_TICK)
 		{
-			this.tetromino.y = this.tetromino.y +1;
-			if(this.tetromino.collide(this.board.board_data))
+			this.tetromino.y += 1;
+			if(this.tetromino.collide(this.board.current_board))
 			{
-			  this.tetromino.y--;
+			  this.tetromino.y -= 1;
 				this.board.add_tetromino(this.tetromino);
 				this.board.check_rows();
 				this.tetromino.dead();
@@ -43,31 +43,28 @@ class Game{
 			this.tick = 0;
 		}
 
-		//!REFACTOR temporary thing 
 		if(this.tetromino.is_dead)
 		{
 			this.tetromino.is_dead = false;
 			this.tetromino.set_new_shape();
 			this.tetromino.y = 0;
 			this.tetromino.x = this.board.cell_width/2-2;
-			if(this.tetromino.collide(this.board.board_data))
+			if(this.tetromino.collide(this.board.current_board))
 				console.log("the game is over");
-
 		}
 			
-		//Response for keys
-		//also checking boundiers
+		//key response and bondry checking
 		if(key.left) 
 			{
-				this.tetromino.x = this.tetromino.x-1;
-				if(this.tetromino.collide(this.board.board_data))
-					this.tetromino.x +=1;
+				if(!(this.tick % 5)) this.tetromino.x -= 1;
+				if(this.tetromino.collide(this.board.current_board))
+					this.tetromino.x += 1;
 			}
 
 		if(key.right) 
 			{
-				this.tetromino.x = this.tetromino.x+1;
-				if(this.tetromino.collide(this.board.board_data))
+				if(!(this.tick % 5)) this.tetromino.x += 1;
+				if(this.tetromino.collide(this.board.current_board))
 					this.tetromino.x -=1;
 			}
 
@@ -77,12 +74,19 @@ class Game{
 			{
 				this.up_key_flag = true;
 				this.tetromino.rotate();
+				if(this.tetromino.collide(this.board.current_board))
+				{
+					this.tetromino.rotate();
+					this.tetromino.rotate();
+					this.tetromino.rotate();
+				}
 			}
 		}
 		else this.up_key_flag = false;
 		
 		//render function
 		this.render(this.ctx);
+
 		this.tick++;
 
 		},500);

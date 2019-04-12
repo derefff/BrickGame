@@ -32,37 +32,17 @@ class Element{
 //!REFECTOR
 	get y(){return this._y}
 	get x(){return this._x}
-	get rotation(){return this._r}
 	get current_shape() {return this.data}
 
 	set y(a){this._y = a}
 	set x(a){this._x= a}
-	set rotation(a){this._r=a}
-
+	set current_shape(new_data){this.data = new_data;}
 	dead(){this.is_dead = true;}
-
-	check_max()
-	{
-		let temp;
-
-		for(let i = this.data.length -1; i > 0; i--)
-			for(let j = 0; j < this.data.length; j++)
-				if(temp == undefined && this.data[j][i] == 1)
-				{
-					temp =i;
-					break;
-				}
-
-		 return temp;
-	}
 
 	update_history()
 	{
-		/* historia 4 ostatnich figur
-			the history begins with a Z,Z,S,S sequence.
-			as the first piece overwrites the first Z rather than 
-			pushing off the last S, 
-		*/
+		/* the history (of last 4 peaces) begins with a Z,Z,S,S,
+			first piece overwrites the first Z */
 		if(this.current_letter)
 		{
 			this.history.pop();
@@ -85,27 +65,25 @@ class Element{
 				if(letter === this.letters[rand]) res = true;
 		}
 
-		this.data = this.peaces[this.letters[rand]];
+		this.current_shape = this.peaces[this.letters[rand]];
 		this.current_letter =this.letters[rand];
 	}
 
 
 	rotate()
 	{
-		let temp = this.data;
-		this.data = Misc.rotate_matrix(this.data);
-		if(this.x<0) this.data = temp;
-		if(this.x+this.check_max()>9) this.data = temp;
-}
+		let temp = this.current_shape;
+		this.current_shape = Misc.rotate_matrix(this.current_shape);
+	}
 
 	//baord.data
-	collide(board) 
+	collide(board_data) 
 	{
-		let al=this.data.length;
+		let al=this.current_shape.length;
 
 		for(let i = 0; i < al; i++)
 			for(let j = 0; j < al; j++)
-				if(this.data[i][j] && (board[this.y + i] && board[this.y +i][this.x+j]) !==0) 
+				if(this.current_shape[i][j] && (board_data[this.y + i] && board_data[this.y +i][this.x+j]) !==0) 
 					return true;
 
 		return false;
@@ -113,13 +91,12 @@ class Element{
 
 	draw(ctx) 
 	{ 
-		for(let i = 0; i < this.data.length; i++)	
-			for(let j = 0; j< this.data[i].length; j++) 
-				if(this.data[j][i] == 1) { 
-					//!REFACTOR matrix draw function 
+		for(let i = 0; i < this.current_shape.length; i++)	
+			for(let j = 0; j< this.current_shape[i].length; j++) 
+				if(this.current_shape[j][i] == 1) { 
 					ctx.beginPath();
 					ctx.fillStyle = "green";
-					ctx.fillRect( (this.x*this.width)+(this.width*i), (this.y*this.width)+(this.width*j), this.width, this.width);
+					ctx.fillRect( (this.x*this.width)+(this.width*i)+1, (this.y*this.width)+(this.width*j)+1, this.width-1, this.width-1);
 					ctx.closePath();
 				}
 	}
