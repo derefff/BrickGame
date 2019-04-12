@@ -10,6 +10,11 @@ class Game{
 		this.up_key_flag = false;
 		this.tick = 0;
 		this.MAX_TICK = 20;	
+		this.stop_playing = false;
+	}
+	is_playing()
+	{
+		return this.stop_playing;
 	}
 
 	render(ctx)
@@ -19,10 +24,19 @@ class Game{
 		ctx.fillStyle='#5b6856';
 		ctx.strokeStyle = 'black';
 		ctx.fillRect(0,0, this.WIDTH, this.HEIGHT);
+
 	
 		//drawing other things
 		this.board.render(ctx);
 		this.tetromino.draw(ctx);
+
+		ctx.beginPath();
+		ctx.strokeStyle= 'white';
+		ctx.moveTo(201,0);
+		ctx.lineTo(201, 400);
+		ctx.stroke();
+		ctx.closePath();
+
 	}
 
 	update()
@@ -50,20 +64,20 @@ class Game{
 			this.tetromino.y = 0;
 			this.tetromino.x = this.board.cell_width/2-2;
 			if(this.tetromino.collide(this.board.current_board))
-				console.log("the game is over");
+				this.stop_playing = true;
 		}
 			
 		//key response and bondry checking
 		if(key.left) 
 			{
-				if(!(this.tick % 5)) this.tetromino.x -= 1;
+				if(!(this.tick % 2)) this.tetromino.x -= 1;
 				if(this.tetromino.collide(this.board.current_board))
 					this.tetromino.x += 1;
 			}
 
 		if(key.right) 
 			{
-				if(!(this.tick % 5)) this.tetromino.x += 1;
+				if(!(this.tick % 2)) this.tetromino.x += 1;
 				if(this.tetromino.collide(this.board.current_board))
 					this.tetromino.x -=1;
 			}

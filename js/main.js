@@ -7,9 +7,14 @@ window.onload = () =>
 	const WIDTH = c.width, HEIGHT = c.height;
 
 	const game = new Game(ctx, WIDTH, HEIGHT);
+	let playing = false;
 
 	function game_loop(){
-		game.update();
+		if(!playing)
+		{
+			game.update();
+			playing = game.is_playing();
+		}
 	}
 
 	setInterval(game_loop, 1000/30);

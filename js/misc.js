@@ -23,4 +23,18 @@ class Misc
 		return temp;
 	}
 
+	static draw_matrix(ctx,mx,w=20,x=0,y=0, g=1) //g stands for gaps 
+	{
+		for(let i = 0; i < mx.length; i++)
+			for(let j = 0; j < mx[i].length; j++)
+			{
+				if(!mx[i][j]) continue;
+				ctx.beginPath();
+				ctx.fillStyle = "green";
+				ctx.fillRect((x*w)+(j*w)+g, (y*w)+(i*w)+g,w-g,w-g);
+				ctx.closePath();
+			}
+	}
+
+
 }

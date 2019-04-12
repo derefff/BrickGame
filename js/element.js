@@ -25,6 +25,7 @@ class Element{
 		this.data;
 		this.history=['Z','Z','S','S'];
 		this.current_letter;
+		this.next_letter; // next shape
 		this.set_new_shape();
 		this.is_dead = false;
 	}
@@ -33,6 +34,7 @@ class Element{
 	get y(){return this._y}
 	get x(){return this._x}
 	get current_shape() {return this.data}
+	get next_shape(){return this.peaces[this.next_letter]};
 
 	set y(a){this._y = a}
 	set x(a){this._x= a}
@@ -91,14 +93,7 @@ class Element{
 
 	draw(ctx) 
 	{ 
-		for(let i = 0; i < this.current_shape.length; i++)	
-			for(let j = 0; j< this.current_shape[i].length; j++) 
-				if(this.current_shape[j][i] == 1) { 
-					ctx.beginPath();
-					ctx.fillStyle = "green";
-					ctx.fillRect( (this.x*this.width)+(this.width*i)+1, (this.y*this.width)+(this.width*j)+1, this.width-1, this.width-1);
-					ctx.closePath();
-				}
+		Misc.draw_matrix(ctx,this.current_shape,this.width, this.x, this.y);
 	}
 
 }

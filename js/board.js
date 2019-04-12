@@ -38,40 +38,23 @@ class Board
 	render(ctx)
 	{
 		//white stripes 
-		/*for(let i = 0; i < this.cell_width; i++)
-		{
-			ctx.beginPath();
-			ctx.strokeStyle = 'white';	
-			ctx.moveTo(this.block_size*i,0);
-			ctx.lineTo(this.block_size*i,this.block_size*this.cell_height);
-			ctx.stroke();
-			ctx.closePath();
-		}
-
+		/*
 		for(let j = 0; j < this.cell_height; j++)
 		{
 			ctx.beginPath();
 			ctx.strokeStyle = 'white';	
 			ctx.moveTo(0, this.block_size*j);
 			ctx.lineTo(this.cell_width*this.block_size,this.block_size*j);
+			if(j < this.cell_width)
+			{
+			ctx.moveTo(this.block_size*j,0);
+			ctx.lineTo(this.block_size*j,this.block_size*this.cell_height);
+			}	
 			ctx.stroke();
 			ctx.closePath();
-		}
-		*/
-		this.current_board.forEach((elem,y) =>{
-			elem.forEach((sub_elem,x)=>
-			{
-				if(sub_elem == 1)
-				{
-					ctx.beginPath();
-					ctx.fillStyle = "green";
-					ctx.fillRect(x*20+1, y*20+1,19,19);	
-					ctx.closePath();
-				}
-			});
-		});
-
-	
+		}*/
+		
+		Misc.draw_matrix(ctx,this.current_board);
 	}
 
 }
