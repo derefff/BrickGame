@@ -25,7 +25,7 @@ class Element{
 		this.data;
 		this.history=['Z','Z','S','S'];
 		this.current_letter;
-		this.next_letter; // next shape
+		this.next_letter = this.get_random_letter(); // next shape
 		this.set_new_shape();
 		this.is_dead = false;
 	}
@@ -52,23 +52,29 @@ class Element{
 		}
 	}
 
-	set_new_shape()
+	get_random_letter()
 	{
-		this.update_history();
-
 		let rand; 
 		let res = true;
+
 		while(res)
 		{
 			rand =  Math.floor(Math.random()*7);
 			res = false
 
+			//!REFACTOR this.next... == ths.let is prabably unecessery
 			for (let letter of this.history)
-				if(letter === this.letters[rand]) res = true;
+				if(letter === this.letters[rand] || this.current_letter === this.letters[rand] || this.next_letter === this.letters[rand] ) res = true;
 		}
+		return this.letters[rand]; 
+	}
 
-		this.current_shape = this.peaces[this.letters[rand]];
-		this.current_letter =this.letters[rand];
+	set_new_shape()
+	{
+		this.update_history();
+		this.current_shape = this.peaces[this.next_letter]; 
+		this.current_letter = this.next_letter;
+		this.next_letter = this.get_random_letter();
 	}
 
 

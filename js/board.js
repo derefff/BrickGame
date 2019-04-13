@@ -31,7 +31,7 @@ class Board
 
 			this.current_board.splice(i,1);
 			this.current_board.unshift([0,0,0,0,0,0,0,0,0,0]);
-			i++;
+			++i;
 		}
 	}
 

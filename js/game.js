@@ -17,6 +17,21 @@ class Game{
 		return this.stop_playing;
 	}
 
+	draw_hud(ctx)
+	{
+		ctx.beginPath();
+		ctx.strokeStyle= 'white';
+		ctx.moveTo(201,0);
+		ctx.lineTo(201, 400);
+		ctx.stroke();
+		ctx.fillStyle = '#000';
+		ctx.font = '0.9em Arial';
+		ctx.fillText('next shape', 205, 55);
+		ctx.closePath();
+
+		Misc.draw_matrix(ctx,this.tetromino.next_shape,15,14.5,4);
+	}
+
 	render(ctx)
 	{
 		//drawing background
@@ -29,14 +44,7 @@ class Game{
 		//drawing other things
 		this.board.render(ctx);
 		this.tetromino.draw(ctx);
-
-		ctx.beginPath();
-		ctx.strokeStyle= 'white';
-		ctx.moveTo(201,0);
-		ctx.lineTo(201, 400);
-		ctx.stroke();
-		ctx.closePath();
-
+		this.draw_hud(ctx);
 	}
 
 	update()
@@ -46,7 +54,7 @@ class Game{
 
 		if(this.tick == this.MAX_TICK)
 		{
-			this.tetromino.y += 1;
+			if(!key.down)this.tetromino.y += 1;
 			if(this.tetromino.collide(this.board.current_board))
 			{
 			  this.tetromino.y -= 1;
@@ -80,6 +88,18 @@ class Game{
 				if(!(this.tick % 2)) this.tetromino.x += 1;
 				if(this.tetromino.collide(this.board.current_board))
 					this.tetromino.x -=1;
+			}
+
+		if(key.down)
+			{
+				if(!(this.tick % 2))this.tetromino.y +=1;
+				if(this.tetromino.collide(this.board.current_board))
+				{
+					this.tetromino.y -= 1;
+					this.board.add_tetromino(this.tetromino);
+					this.board.check_rows();
+					this.tetromino.dead();
+				}
 			}
 
 		if(key.up) 
