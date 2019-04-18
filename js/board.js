@@ -1,8 +1,11 @@
 class Board
 {
-	constructor()
+	constructor(b_size,cx=0,cy=0)
 	{
-		this.block_size = 20;
+		this.x = cx;
+		this.y = cy;
+
+		this.block_size = b_size;
 		this.cell_height = 20;
 		this.cell_width = 10;
 		this.data = Misc.create_matrix(this.cell_width, this.cell_height);
@@ -54,7 +57,7 @@ class Board
 			ctx.closePath();
 		}*/
 		
-		Misc.draw_matrix(ctx,this.current_board);
+		Misc.draw_matrix(ctx,this.current_board,this.block_size,0,0,this.x,this.y);
 	}
 
 }

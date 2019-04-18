@@ -23,7 +23,9 @@ class Misc
 		return temp;
 	}
 
-	static draw_matrix(ctx,mx,w=20,x=0,y=0, g=1) //g stands for gaps 
+	//note here that x and y are like 1,2..
+	//then to get thier true x/y i multply by block_size
+	static draw_matrix(ctx,mx,w=20,x=0,y=0,ofX=0,ofY=0, g=1) //g stands for gaps 
 	{
 		for(let i = 0; i < mx.length; i++)
 			for(let j = 0; j < mx[i].length; j++)
@@ -31,7 +33,7 @@ class Misc
 				if(!mx[i][j]) continue;
 				ctx.beginPath();
 				ctx.fillStyle = "green";
-				ctx.fillRect((x*w)+(j*w)+g, (y*w)+(i*w)+g,w-g,w-g);
+				ctx.fillRect((x*w)+(j*w)+g+ofX, (y*w)+(i*w)+g+ofY,w-g,w-g);
 				ctx.closePath();
 			}
 	}

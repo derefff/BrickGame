@@ -4,18 +4,17 @@ class Game{
 		this.ctx = ctx;
 		this.WIDTH = W;
 		this.HEIGHT = H;
-		this.board = new Board();
-		this.tetromino = new Element(this.board.cell_width/2-2,0,20);
+		this.block_size = 20;
+		this.board = new Board(this.block_size);
+		this.tetromino = new Element(this.board.cell_width/2-2,0,20,this.board.x,this.board.y);
 
 		this.up_key_flag = false;
 		this.tick = 0;
 		this.MAX_TICK = 20;	
 		this.stop_playing = false;
 	}
-	is_playing()
-	{
-		return this.stop_playing;
-	}
+
+	is_playing(){return this.stop_playing;}
 
 	draw_hud(ctx)
 	{
@@ -29,7 +28,7 @@ class Game{
 		ctx.fillText('next shape', 205, 55);
 		ctx.closePath();
 
-		Misc.draw_matrix(ctx,this.tetromino.next_shape,15,14.5,4);
+		Misc.draw_matrix(ctx,this.tetromino.next_shape,15,0,0,220,60);
 	}
 
 	render(ctx)
@@ -40,7 +39,6 @@ class Game{
 		ctx.strokeStyle = 'black';
 		ctx.fillRect(0,0, this.WIDTH, this.HEIGHT);
 
-	
 		//drawing other things
 		this.board.render(ctx);
 		this.tetromino.draw(ctx);

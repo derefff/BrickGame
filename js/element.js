@@ -1,18 +1,12 @@
-class Element{
-	/*	I: [1,1,1,1],
-	J: [1,1,1,0,0,0,1],
-	L: [1,1,1,0,1],
-	O: [1,1,0,0,1,1],
-	S: [0,1,1,0,1,1],
-	T: [1,1,1,0,0,1],
-	Z: [1,1,0,0,0,1,1]
-*/	
-	constructor(x,y,w)
+class Element
+{
+	constructor(x,y,w,ofX=0,ofY=0)
 	{
 		this.width = w;
 		this._x = x;
 		this._y = y;
-		this._r = 0;
+		this.offsetX = ofX;
+		this.offsetY = ofY;
 		this.letters = ['I','J','L','O','S','Z','T'];
 		this.peaces = {
 			I:[[0,1,0,0],[0,1,0,0],[0,1,0,0],[0,1,0,0]],
@@ -99,7 +93,7 @@ class Element{
 
 	draw(ctx) 
 	{ 
-		Misc.draw_matrix(ctx,this.current_shape,this.width, this.x, this.y);
+		Misc.draw_matrix(ctx,this.current_shape,this.width,this.x,this.y,this.offsetX,this.offsetY);
 	}
 
 }
