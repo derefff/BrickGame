@@ -31,6 +31,12 @@ class Game{
 		Misc.draw_matrix(ctx,this.tetromino.next_shape,15,0,0,220,60);
 	}
 
+	send_data()
+	{
+		return this.board.current_board;
+	}
+
+
 	render(ctx)
 	{
 		//drawing background
