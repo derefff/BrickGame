@@ -7,11 +7,13 @@ class Game{
 		this.block_size = 20;
 		this.board = new Board(this.block_size);
 		this.tetromino = new Element(this.board.cell_width/2-2,0,20,this.board.x,this.board.y);
-
+		
 		this.up_key_flag = false;
 		this.tick = 0;
 		this.MAX_TICK = 20;	
 		this.stop_playing = false;
+
+		this.other_players;
 	}
 
 	is_playing(){return this.stop_playing;}
@@ -124,7 +126,7 @@ class Game{
 		
 		//render function
 		this.render(this.ctx);
-
+		//	console.log(this.other_players);
 		this.tick++;
 
 		},500);

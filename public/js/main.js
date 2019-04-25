@@ -11,14 +11,22 @@ window.onload = () =>
 	const game = new Game(ctx, WIDTH, HEIGHT);
 	let playing = false;
 	let init = false;
+	var tok;
 
 	function game_loop(){
-		if(!init)
-		{
-			let data = { id: socket.id }
-			socket.emit('init', data);
-			init = true;
-		}
+
+		socket.on('connect', ()=>{
+			if(!init)
+			{
+				console.log(socket.connected);
+				let data = { id: socket.id }
+				socket.emit('init', data);
+				socket.on('init', data=>{
+					tok = data;
+				});
+				init = true;
+			}
+		});
 
 		if(!playing)
 		{
@@ -27,11 +35,17 @@ window.onload = () =>
 			
 			let	data = {
 				id: socket.id,
+				arr_index: tok,
 				is_alive: playing,
-				board: game.send_data()
-			}
+				board: game.send_data()}
 
-			socket.emit('update', data);
+			if(init)
+			{
+				socket.emit('update', data);
+				socket.on('player_list', pl =>{
+				game.other_players = pl;	
+				});
+			}
 		}
 	}
 
