@@ -1,7 +1,7 @@
 window.onload = () =>
 {
 	console.info("canvas loaded: game started");
-	let socket = io.connect();
+	const socket = io.connect();
 
 	/*---------------------*/
 	const canvas = document.getElementById('c');
@@ -11,7 +11,7 @@ window.onload = () =>
 	const game = new Game(ctx, WIDTH, HEIGHT);
 	let playing = false;
 	let init = false;
-	var tok;
+	let tok;
 
 	function game_loop(){
 
@@ -20,10 +20,14 @@ window.onload = () =>
 			{
 				console.log(socket.connected);
 				let data = { id: socket.id }
+
 				socket.emit('init', data);
+				//to jest lewe ;-:
 				socket.on('init', data=>{
 					tok = data;
 				});
+
+				game.id = socket.id;
 				init = true;
 			}
 		});
@@ -35,7 +39,7 @@ window.onload = () =>
 			
 			let	data = {
 				id: socket.id,
-				arr_index: tok,
+				//arr_index: tok,
 				is_alive: playing,
 				board: game.send_data()}
 
@@ -43,7 +47,11 @@ window.onload = () =>
 			{
 				socket.emit('update', data);
 				socket.on('player_list', pl =>{
+				let index = pl.findIndex(element => element.id == socket.id);
 				game.other_players = pl;	
+//					console.log(game.other_players);	
+			//	game.other_players.splice(index,1);
+					
 				});
 			}
 		}

@@ -14,17 +14,15 @@ app.get('/', (req,res) =>
 		res.sendFile(__dirname+"/index.html");
 	});
 
-//io.on('update', data =>console.log(data));
 
 io.on('connection', socket =>{
 	console.log(`user ${socket.id} has connected`);
 
 	socket.on('init', data=>{
-//		console.dir(`${data}`);
 		players.push(
 			{ id:socket.id,
 	//			arr_index:null,
-				is_alive:null,
+				//is_alive:null,
 				board:null
 			}); 
 
@@ -32,7 +30,7 @@ io.on('connection', socket =>{
 		let current_player = players[index];
 //		console.log(`init ${index}, ${players[index]}`);
 //		current_player.arr_index = index;
-		current_player.is_alive = false;
+		//current_player.is_alive = false;
 
 		socket.emit('init', index); 
 		console.info(`init`);
@@ -40,11 +38,16 @@ io.on('connection', socket =>{
 	});
 
 	socket.on('update', data =>{
-		let index = players.findIndex(element => element.id == data.id);
-		players[index].is_alive = data.is_alive;
-		players[index].board = data.board;
+		//let index = players.findIndex(element => element.id == data.id);
+		//players[index].is_alive = data.is_alive;
+		//players[index].board = data.board;
+			
+		for(let i =0; i < players.length; i++)
+		{
+			if(players[i].id == data.id) players[i].board = data.board;
+		}
 		//wysylawnie listy graczy
-		socket.emit('player_list', players);
+		io.sockets.emit('player_list', players);
 
 	});
 

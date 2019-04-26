@@ -13,7 +13,8 @@ class Game{
 		this.MAX_TICK = 20;	
 		this.stop_playing = false;
 
-		this.other_players;
+		this.other_players =[];
+		this.id;
 	}
 
 	is_playing(){return this.stop_playing;}
@@ -33,10 +34,7 @@ class Game{
 		Misc.draw_matrix(ctx,this.tetromino.next_shape,15,0,0,220,60);
 	}
 
-	send_data()
-	{
-		return this.board.current_board;
-	}
+	send_data() { return this.board.current_board; }
 
 
 	render(ctx)
@@ -49,8 +47,28 @@ class Game{
 
 		//drawing other things
 		this.board.render(ctx);
+			let x = 0;
+			for(let i in this.other_players)
+				if(this.other_players[i].id != this.id)
+				{
+					ctx.beginPath();
+					ctx.moveTo(300+(110*x),0);
+					ctx.lineTo(300+(110*x)+100,0);
+					ctx.lineTo(300+(110*x)+100,200);
+					ctx.lineTo(300+(110*x),200);
+					ctx.lineTo(300+(110*x),0);
+					ctx.stroke();
+					ctx.closePath();
+
+					Misc.draw_matrix(ctx,this.other_players[i].board,10,0,0,300+(110*x));
+					x++;
+				}
+
+			x=0;	
+				
 		this.tetromino.draw(ctx);
 		this.draw_hud(ctx);
+		
 	}
 
 	update()
