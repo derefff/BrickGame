@@ -56,7 +56,9 @@ class Board
 			ctx.stroke();
 			ctx.closePath();
 		}*/
-		
+		ctx.beginPath();
+		ctx.fillStyle ='#5b6856';	
+		ctx.fillRect(0,0, this.block_size*this.cell_width+100, this.block_size*this.cell_height);
 		Misc.draw_matrix(ctx,this.current_board,this.block_size,0,0,this.x,this.y);
 	}
 

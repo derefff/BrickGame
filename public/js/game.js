@@ -39,32 +39,41 @@ class Game{
 
 	render(ctx)
 	{
-		//drawing background
+		//drawing background #5b6856
 		ctx.clearRect(0,0,this.WIDTH,this.HEIGHT);
-		ctx.fillStyle='#5b6856';
+		ctx.fillStyle='darkgrey';
 		ctx.strokeStyle = 'black';
 		ctx.fillRect(0,0, this.WIDTH, this.HEIGHT);
 
 		//drawing other things
 		this.board.render(ctx);
-			let x = 0;
-			for(let i in this.other_players)
-				if(this.other_players[i].id != this.id)
-				{
-					ctx.beginPath();
-					ctx.moveTo(300+(110*x),0);
-					ctx.lineTo(300+(110*x)+100,0);
-					ctx.lineTo(300+(110*x)+100,200);
-					ctx.lineTo(300+(110*x),200);
-					ctx.lineTo(300+(110*x),0);
-					ctx.stroke();
-					ctx.closePath();
 
-					Misc.draw_matrix(ctx,this.other_players[i].board,10,0,0,300+(110*x));
-					x++;
-				}
+		let x = 0;
+		let all_players = this.other_players.length-1;
 
-			x=0;	
+		for(let i in this.other_players)
+			if(this.other_players[i].id != this.id)
+			{
+				//here gonna be few errors 
+				let rows_of_players = Math.floor(all_players/5);
+				let bs = 20-(5*rows_of_players);
+				let board_width=bs*10;
+				let board_height=bs*20;
+				let current_row = Math.floor(i/5);
+				x%=5;
+
+				ctx.beginPath();
+				ctx.moveTo(310+(board_width*x+10),board_height*current_row);
+				ctx.lineTo(310+(board_width*x+10)+board_width,board_height*current_row);
+				ctx.lineTo(310+(board_width*x+10)+board_width,board_height*current_row+board_height);
+				ctx.lineTo(310+(board_width*x+10),board_height*current_row+board_height);
+				ctx.lineTo(310+(board_width*x+10),board_height*current_row);
+				ctx.stroke();
+				ctx.closePath();
+
+				Misc.draw_matrix(ctx,this.other_players[i].board,bs,0,0,310+(board_width*x+10),board_height*current_row);
+				x++;
+			}
 				
 		this.tetromino.draw(ctx);
 		this.draw_hud(ctx);
