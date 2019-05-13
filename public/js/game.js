@@ -15,9 +15,20 @@ class Game{
 
 		this.other_players =[];
 		this.id;
+
+		this.s = false;
 	}
 
 	is_playing(){return this.stop_playing;}
+
+	send(){
+		if(this.s)
+		{
+			this.s = false;
+			return true;
+		}
+	 }
+
 
 	draw_hud(ctx)
 	{
@@ -36,6 +47,11 @@ class Game{
 
 	send_data() { return this.board.current_board; }
 
+
+	render_other_players(ctx)
+	{
+
+	}
 
 	render(ctx)
 	{
@@ -63,15 +79,26 @@ class Game{
 				x%=5;
 
 				ctx.beginPath();
-				ctx.moveTo(310+(board_width*x+10),board_height*current_row);
-				ctx.lineTo(310+(board_width*x+10)+board_width,board_height*current_row);
-				ctx.lineTo(310+(board_width*x+10)+board_width,board_height*current_row+board_height);
-				ctx.lineTo(310+(board_width*x+10),board_height*current_row+board_height);
-				ctx.lineTo(310+(board_width*x+10),board_height*current_row);
+				ctx.moveTo(310 + (board_width * x + 10), board_height * current_row);
+				ctx.lineTo(310 + (board_width * x + 10) + board_width, board_height * current_row);
+				ctx.lineTo(310 + (board_width * x + 10) + board_width, board_height * current_row + board_height);
+				ctx.lineTo(310 + (board_width * x + 10), board_height * current_row + board_height);
+				ctx.lineTo(310 + (board_width * x + 10), board_height * current_row);
 				ctx.stroke();
 				ctx.closePath();
 
-				Misc.draw_matrix(ctx,this.other_players[i].board,bs,0,0,310+(board_width*x+10),board_height*current_row);
+
+				if(!this.other_players[i].alive)
+				{
+					Misc.draw_matrix(ctx,this.other_players[i].board,bs,0,0,310+(board_width*x+10),board_height*current_row);
+				}
+				else
+				{
+					ctx.beginPath();
+					ctx.font = "18px Georgia";
+					ctx.fillText("Player has lost!",310 + (board_width * x + board_width / 2 -50 ), board_height * current_row + board_height/2);
+					ctx.closePath();
+				}
 				x++;
 			}
 				
@@ -94,6 +121,7 @@ class Game{
 				this.board.add_tetromino(this.tetromino);
 				this.board.check_rows();
 				this.tetromino.dead();
+				this.s = true;
 			}
 			this.tick = 0;
 		}
@@ -106,6 +134,7 @@ class Game{
 			this.tetromino.x = this.board.cell_width/2-2;
 			if(this.tetromino.collide(this.board.current_board))
 				this.stop_playing = true;
+			
 		}
 			
 		//key response and bondry checking
@@ -152,8 +181,7 @@ class Game{
 		else this.up_key_flag = false;
 		
 		//render function
-		this.render(this.ctx);
-		//	console.log(this.other_players);
+		// this.render(this.ctx);
 		this.tick++;
 
 		},500);

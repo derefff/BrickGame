@@ -1,62 +1,62 @@
-window.onload = () =>
-{
-	console.info("canvas loaded: game started");
-	const socket = io.connect();
+const socket = io.connect();
+socket.on('connect', ()=>{
+	window.onload = () =>
+	{
+		console.info("canvas loaded: game started");
 
-	/*---------------------*/
-	const canvas = document.getElementById('c');
-	const ctx = canvas.getContext('2d');
-	const WIDTH = c.width, HEIGHT = c.height;
+		/*---------------------*/
+		const canvas = document.getElementById('c');
+		const ctx = canvas.getContext('2d');
+		const WIDTH = c.width, HEIGHT = c.height;
 
-	const game = new Game(ctx, WIDTH, HEIGHT);
-	let playing = false;
-	let init = false;
-	let tok;
+		const game = new Game(ctx, WIDTH, HEIGHT);
+		let playing = false;
+		let init = false;
 
-	function game_loop(){
+		function game_loop(){
 
-		socket.on('connect', ()=>{
-			if(!init)
+				if(!init)
+				{
+					// console.log(socket.connected);
+
+					//sending id to the server
+					let data = { id: socket.id }
+					socket.emit('init', data);
+
+					game.id = socket.id;
+					init = true;
+				}
+
+			if(!playing)
 			{
-				console.log(socket.connected);
-				let data = { id: socket.id }
-
-				socket.emit('init', data);
-				//to jest lewe ;-:
-				socket.on('init', data=>{
-					tok = data;
-				});
-
-				game.id = socket.id;
-				init = true;
+				game.update();
+				playing = game.is_playing();
 			}
-		});
 
-		if(!playing)
-		{
-			game.update();
-			playing = game.is_playing();
-			
-			let	data = {
-				id: socket.id,
-				//arr_index: tok,
-				is_alive: playing,
-				board: game.send_data()}
+			if(init) game.render(ctx);
 
 			if(init)
 			{
+				let	data = {
+					id: socket.id,
+					alive: playing,
+					board: game.send_data() };
+
 				socket.emit('update', data);
+
 				socket.on('player_list', pl =>{
 				let index = pl.findIndex(element => element.id == socket.id);
 				game.other_players = pl;	
-//					console.log(game.other_players);	
+			//	console.log(game.other_players);	
 			//	game.other_players.splice(index,1);
-					
+				
+					game.render_other_players(ctx);
 				});
 			}
+
 		}
+
+		setInterval(game_loop, 1000/30);
+
 	}
-
-	setInterval(game_loop, 1000/30);
-
-}
+});
