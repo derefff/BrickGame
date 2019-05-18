@@ -1,4 +1,6 @@
 const socket = io.connect();
+//const socket = io.connect('/game');
+
 socket.on('connect', ()=>{
 	window.onload = () =>
 	{
@@ -12,6 +14,7 @@ socket.on('connect', ()=>{
 		const game = new Game(ctx, WIDTH, HEIGHT);
 		let playing = false;
 		let init = false;
+		let _room="";
 
 		function game_loop(){
 
@@ -19,10 +22,18 @@ socket.on('connect', ()=>{
 				{
 					// console.log(socket.connected);
 
-					//sending id to the server
-					let data = { id: socket.id }
+					//query value
+					const usp = new URLSearchParams(window.location.search).get("id");
+					_room="room"+usp.toString();
+
+					//sending id/room name to the server
+					let data = { 
+						id: socket.id, 
+						room: 'room'+usp.toString()
+					}
 					socket.emit('init', data);
 
+					console.log(data.room);
 					game.id = socket.id;
 					init = true;
 				}
@@ -40,6 +51,7 @@ socket.on('connect', ()=>{
 				let	data = {
 					id: socket.id,
 					alive: playing,
+					room: _room,
 					board: game.send_data() };
 
 				socket.emit('update', data);

@@ -2,21 +2,29 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>prototype</title>
+	<title>prototype main page</title>
 
-	<link type="text/css" rel="stylesheet" href="css/style.css">
-
-	<!-- scripts -->
+	<!--js-->
 	<script src="/socket.io/socket.io.js"></script>
-	<script src="js/key.js"></script>
-	<script src="js/misc.js"></script>
-	<script src="js/element.js"></script>
-	<script src="js/board.js"></script>
-	<script src="js/game.js"></script>
-	<script src="js/main.js"></script>
-
+	<script src="js/lobby.js"></script>
 </head>
 <body>
-	<canvas id="c" width=880 height=700></canvas>
+	<!--part where you can create game-->	
+	<form action="/make" method="get">
+
+		max players <input id="max-players-btn" name="max" type="number" value="2" min="2" max="15">
+		<br>
+		<input type="submit" value="create room">
+	</form>
+
+	<fieldset>
+		<legend>
+		current rooms
+		</legend>
+
+	</fieldset>
+
+	<!--part where you can join to game-->	
+
 </body>
 </html>
