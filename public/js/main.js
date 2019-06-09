@@ -1,10 +1,11 @@
-const socket = io.connect();
-//const socket = io.connect('/game');
+const socket = io.connect()
 
 socket.on('connect', ()=>{
+	socket.emit('joined_game');
 	window.onload = () =>
 	{
 		console.info("canvas loaded: game started");
+		console.info(socket.id);
 
 		/*---------------------*/
 		const canvas = document.getElementById('c');
@@ -21,7 +22,6 @@ socket.on('connect', ()=>{
 				if(!init)
 				{
 					// console.log(socket.connected);
-
 					//query value
 					const usp = new URLSearchParams(window.location.search).get("id");
 					_room="room"+usp.toString();
@@ -44,10 +44,11 @@ socket.on('connect', ()=>{
 				playing = game.is_playing();
 			}
 
-			if(init) game.render(ctx);
-
+			
 			if(init)
 			{
+				game.render(ctx);
+
 				let	data = {
 					id: socket.id,
 					alive: playing,
@@ -59,7 +60,8 @@ socket.on('connect', ()=>{
 				socket.on('player_list', pl =>{
 				let index = pl.findIndex(element => element.id == socket.id);
 				game.other_players = pl;	
-			//	console.log(game.other_players);	
+				console.log(pl);
+				// console.log(game.other_players);	
 			//	game.other_players.splice(index,1);
 				
 					game.render_other_players(ctx);
