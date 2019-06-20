@@ -179,9 +179,7 @@ class Game{
 			}
 		}
 		else this.up_key_flag = false;
-		
-		//render function
-		// this.render(this.ctx);
+
 		this.tick++;
 
 		},500);

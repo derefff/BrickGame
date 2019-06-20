@@ -15,6 +15,7 @@ function display_rooms(room_arr){
 	{
 		let current_room = `room  ${room.id} 
 		where ${room.players.length} / ${room.max_players} players 
+		[${room.state}]
 		<input type="button" name="btn" value="join" 
 		onclick='change_site(${room.id})'> <br>`; 
 

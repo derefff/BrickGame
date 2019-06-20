@@ -8,41 +8,23 @@ const room = require('./lib/room');
 
 const port = process.env.PORT || 3000;
 
-//TODO
-//
-//
-
-
 server.listen(port, ()=> console.log(`server listening on ${port}`));
 
 const players = [];
 const rooms = [];
-
-let timer = 60;
 
 app.use(express.static('public'));
 
 app.get('/', (req,res) =>
 	{
 		res.sendFile(__dirname+"/index.html");
-
 	});
 
 app.get('/make', (req,res) =>
 	{
-		// let room_obj = {
-		// 	id: rooms.length,
-		// 	name: 'room'+rooms.length,
-		// 	max_players: req.query.max,
-		// 	players: []
-		// }
-
 		let room_name = 'room'+rooms.length;
 		let room_obj = new room(rooms.length, room_name, req.query.max);
 
-		// lobby.emit('update_rooms', rooms);
-
-		//console.log(room_obj.max_players, room_obj.name);
 		rooms.push(room_obj);
 		res.redirect('/game?id='+rooms[rooms.length-1].id);
 
@@ -55,10 +37,10 @@ app.get('/game', (req,res) =>
 
 io.on('connection', socket =>{
 	console.log(`user ${socket.id} has connected`);
-	
+
 	socket.on('joined_lobby', ()=>
 	{
-		//naprawic to 
+		//naprawic to
 		socket.join('lobby', ()=>{
 			io.sockets.emit('update_rooms', rooms);
 			console.log('joined lobby');
@@ -72,9 +54,8 @@ io.on('connection', socket =>{
 		socket.in('lobby').emit('update_rooms', rooms);
 	});
 
-	socket.in('game').on('init', data=>{
+	socket.in('game').on('init', data => {
 		for(let i = 0;  i < rooms.length; i++)
-		{
 			if(rooms[i].name == data.room)
 			{
 				rooms[i].players.push(
@@ -83,44 +64,40 @@ io.on('connection', socket =>{
 						alive:null,
 						board:null
 					});
-					
+
 				// console.log(data.room, rooms[i].players.room);
 				socket.in('game').join(rooms[i].name);
 				socket.in('lobby').emit('update_rooms', rooms);
 			}
-		}
 
 		console.info('init');
 
 	});
 
-	socket.in('game').on('update', data =>{
+	socket.in('game').on('update', data => {
 		let room_name = data.room;
 		let index=0;
 		for(let i =0; i < rooms.length; i++)
-		{
 			if(rooms[i].name == room_name)
 			{
 				index = i;
 				for(let j = 0; j <rooms[i].players.length; j++)
-				{
 					if(rooms[i].players[j].id == data.id)
 					{
 						rooms[i].players[j].board = data.board;
 						rooms[i].players[j].alive = data.alive;
 					}
-				}
+
 			}
-		}
-		//  console.log(rooms[index].players);
-		
-		socket.to(data.room).emit('player_list', rooms[index].players);
+
+		socket.to(room_name).emit('player_list', rooms[index].players);
 
 	});
 
 	socket.on('disconnect',()=>{
 		console.log(`user ${socket.id} has disconnected`);
 		socket.leaveAll();
+		//set data of this player to "game over"
 
 	});
 });
