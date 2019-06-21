@@ -1,6 +1,7 @@
 const socket = io.connect()
 
 socket.on('connect', ()=>{
+	socket.on('gtfo', ()=> {window.location = '/?gtfo=true'});
 	socket.emit('joined_game');
 	window.onload = () =>
 	{
@@ -23,6 +24,7 @@ socket.on('connect', ()=>{
 		let frame_time = 0;
 		let filter_str = 20;
 		let fps;
+
 
 		function game_loop(){
 			if(!init)

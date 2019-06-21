@@ -58,19 +58,30 @@ io.on('connection', socket =>{
 		for(let i = 0;  i < rooms.length; i++)
 			if(rooms[i].name == data.room)
 			{
-				rooms[i].players.push(
-					{ id:socket.id,
-						room: data.room,
-						alive:null,
-						board:null
-					});
+				if(!rooms[i].is_maxed_out())
+				{
+					rooms[i].players.push(
+						{ id:socket.id,
+							room: data.room,
+							alive:null,
+							board:null
+						});
 
-				// console.log(data.room, rooms[i].players.room);
-				socket.in('game').join(rooms[i].name);
-				socket.in('lobby').emit('update_rooms', rooms);
+					// console.log(data.room, rooms[i].players.room);
+					socket.in('game').join(rooms[i].name);
+					//socket.in('lobby').emit('update_rooms', rooms);
+					console.info('init');
+				}
+				else
+				{
+					socket.emit('gtfo');
+				}
+
 			}
-
-		console.info('init');
+			
+			socket.in('lobby').emit('update_rooms', rooms);
+		
+		
 
 	});
 
