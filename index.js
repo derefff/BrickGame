@@ -5,6 +5,7 @@ const http = require('http');
 const server = http.createServer(app);
 const io = require('socket.io')(server);
 const room = require('./lib/room');
+const id_maker = require('./lib/id_maker');
 
 const port = process.env.PORT || 3000;
 
@@ -22,8 +23,11 @@ app.get('/', (req,res) =>
 
 app.get('/make', (req,res) =>
 	{
-		let room_name = 'room'+rooms.length;
-		let room_obj = new room(rooms.length, room_name, req.query.max);
+		//hash 
+		let new_id = id_maker.make_id();
+
+		let room_name = 'room'+new_id;
+		let room_obj = new room(new_id, room_name, req.query.max);
 
 		rooms.push(room_obj);
 		res.redirect('/game?id='+rooms[rooms.length-1].id);
@@ -108,7 +112,24 @@ io.on('connection', socket =>{
 	socket.on('disconnect',()=>{
 		console.log(`user ${socket.id} has disconnected`);
 		socket.leaveAll();
+		//leaving depends on the current state of a game
 		//set data of this player to "game over"
 
 	});
 });
+
+
+function update_room_timer(){
+	for(let room of rooms)
+	{
+		room.update_countdown();
+		room.tick();
+		io.to(room.name).emit("countdown", room.game_countdown);
+		if(room.flag_update_state)
+		{
+			io.to("lobby").emit('update_rooms', rooms);
+			room.flag_update_state = false;
+		}
+	}
+}
+setInterval(update_room_timer,1000);

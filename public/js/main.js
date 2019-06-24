@@ -1,15 +1,16 @@
-const socket = io.connect()
-
+const socket = io.connect();
 socket.on('connect', ()=>{
-	socket.on('gtfo', ()=> {window.location = '/?gtfo=true'});
+	socket.on('gtfo', ()=> {window.location = '/?gtfo=♥'});
 	socket.emit('joined_game');
-	window.onload = () =>
+	window.onload = content;
+	function content()
 	{
 		console.info("canvas loaded: game started");
 		console.info(socket.id);
 		/*---------------------*/
 		const canvas = document.getElementById('c');
 		const fps_div = document.querySelector('#fps');
+		const time_div = document.querySelector('#timer');
 		const ctx = canvas.getContext('2d');
 		const WIDTH = c.width, HEIGHT = c.height;
 
@@ -17,6 +18,7 @@ socket.on('connect', ()=>{
 		let playing = false;
 		let init = false;
 		let _room="";
+		let room_countdown=0;
 
 		//stolen code from stack overflow
 		let last_loop = Date.now();
@@ -25,19 +27,18 @@ socket.on('connect', ()=>{
 		let filter_str = 20;
 		let fps;
 
-
 		function game_loop(){
 			if(!init)
 			{
 				// console.log(socket.connected);
 				//query value
 				const usp = new URLSearchParams(window.location.search).get("id");
-				_room="room"+usp.toString();
-
+				console.log(typeof(usp))
+				_room="room"+usp;
 				//sending id/room name to the server
 				let data = { 
 					id: socket.id, 
-					room: 'room'+usp.toString()
+					room: 'room'+usp
 				}
 				socket.emit('init', data);
 
@@ -64,11 +65,14 @@ socket.on('connect', ()=>{
 					board: game.send_data() };
 
 				socket.emit('update', data);
+				socket.on('countdown', time=>{
+					room_countdown = time;
+				});
 
 				socket.on('player_list', pl =>{
 				let index = pl.findIndex(element => element.id == socket.id);
 				game.other_players = pl;	
-				console.log(pl);
+				// console.log(pl);
 				// console.log(game.other_players);	
 				//game.other_players.splice(index,1);
 				
@@ -93,7 +97,9 @@ socket.on('connect', ()=>{
 		//displaying fps counter on the bototm
 		setInterval(()=>{
 				fps_div.innerHTML = fps.toFixed(1);
+				time_div.innerHTML = room_countdown;
+
 		},1000);
 
-	}
+	};
 });
