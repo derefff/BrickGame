@@ -3,6 +3,7 @@ socket.on('connect', ()=>{
 	socket.on('gtfo', ()=> {window.location = '/?gtfo=♥'});
 	socket.emit('joined_game');
 	window.onload = content;
+	
 	function content()
 	{
 		console.info("canvas loaded: game started");

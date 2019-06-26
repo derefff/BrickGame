@@ -32,7 +32,8 @@ class Misc
 			{
 				if(!mx[i][j]) continue;
 				ctx.beginPath();
-				ctx.fillStyle = "green";
+				if(mx[i][j] === 1) ctx.fillStyle = "green";
+				if(mx[i][j] === 2) ctx.fillStyle = "gray";
 				ctx.fillRect((x*w)+(j*w)+g+ofX, (y*w)+(i*w)+g+ofY,w-g,w-g);
 				ctx.closePath();
 			}

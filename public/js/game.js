@@ -107,6 +107,11 @@ class Game{
 		
 	}
 
+	make_game_harder()
+	{
+		
+	}
+
 	update()
 	{	
 		//time delay
