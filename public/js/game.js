@@ -13,9 +13,16 @@ class Game{
 		this.MAX_TICK = 20;	
 		this.stop_playing = false;
 
-		this.other_players =[];
+		this.other_players = [];
 		this.id;
+		this.countdown;
 
+		this.state_index = 0;
+    this.states = ["waiting for players", "currently playing", "game has ended"];
+    this.state = this.states[this.state_index % 3];
+		/*waiting for players -> 1 min countdown
+    currently playing ->  1min countdown interval  | also time limit here 
+    game has ended */
 		this.s = false;
 	}
 
@@ -30,6 +37,12 @@ class Game{
 	}
 	
 	send_data() { return this.board.current_board; }
+	
+	change_state()
+	{
+		this.state_index++;
+		this.state = this.states[this.state_index % 3];
+	}
 
 	draw_hud(ctx)
 	{
@@ -46,6 +59,23 @@ class Game{
 		Misc.draw_matrix(ctx,this.tetromino.next_shape,15,0,0,220,60);
 	}
 
+	draw_countdown()
+	{
+			this.ctx.beginPath();
+			this.ctx.font = '4em Arial';
+			this.ctx.fillStyle = 'black';
+			this.ctx.fillText(`${this.countdown}`, 100, 480);
+			this.ctx.closePath();
+	}
+
+	draw_fps()
+	{
+			this.ctx.beginPath();
+			this.ctx.font = '4em Arial';
+			this.ctx.fillStyle = 'black';
+			this.ctx.fillText(`${this.countdown}`, 100, 480);
+			this.ctx.closePath();
+	}
 
 	render_other_players(ctx)
 	{
@@ -103,6 +133,8 @@ class Game{
 
 		this.tetromino.draw(ctx);
 		this.draw_hud(ctx);
+
+		this.draw_countdown();
 		
 	}
 

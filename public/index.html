@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>prototype main page</title>
+	<title>Brick Game | create/join game</title>
 
 	<!--js-->
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="js/lobby.js"></script>
 </head>
 <body>
-	<!--part where you can create game-->	
+	<!--creating game-->	
 	<form action="/make" method="get">
 
 		max players <input id="max-players-btn" name="max" type="number" value="2" min="2" max="15">
@@ -22,13 +22,11 @@
 		current rooms
 		</legend>
 
-
 		<div id="rooms">
-		
+			<!--joining to the game-->	
 		</div>
 	</fieldset>
 
-	<!--part where you can join to game-->	
 
 </body>
 </html>

@@ -135,7 +135,8 @@ function update_room_timer(){
 		io.to(room.name).emit("countdown", room.game_countdown);
 		if(room.flag_update_state)
 		{
-			io.to("lobby").emit('update_rooms', rooms);
+			// io.to("lobby").emit('update_rooms', rooms);
+			io.to(room.name).emit('change_state');
 			room.flag_update_state = false;
 		}
 	}

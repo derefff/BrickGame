@@ -19,7 +19,6 @@ socket.on('connect', ()=>{
 		let playing = false;
 		let init = false;
 		let _room="";
-		let room_countdown=0;
 
 		//stolen code from stack overflow
 		let last_loop = Date.now();
@@ -27,8 +26,19 @@ socket.on('connect', ()=>{
 		let frame_time = 0;
 		let filter_str = 20;
 		let fps;
+		
+		function draw_fps()
+		{
+				ctx.beginPath();
+				ctx.font = '1em Arial';
+				ctx.fillStyle = 'black';
+				ctx.fillText(`${fps.toFixed(1)} fps`, 5, HEIGHT - 10);
+				ctx.closePath();
+		}
 
 		function game_loop(){
+			
+
 			if(!init)
 			{
 				// console.log(socket.connected);
@@ -48,16 +58,26 @@ socket.on('connect', ()=>{
 			}
 
 			if(!playing)
-			{
-				game.update();
+			{	
+				// socket.on("change_state", () =>{});
+				if(game.state == "waiting for players")
+				{
+					if(game.countdown == 0) game.change_state();
+				}
+			
+
+				if(game.state == "currently playing")
+				{
+					game.update();
+				}
+
 				playing = game.is_playing();
 			}
 
-			
 			if(init)
 			{
 				game.render(ctx);
-
+				
 				let	data = {
 					id: socket.id,
 					alive: playing,
@@ -66,17 +86,13 @@ socket.on('connect', ()=>{
 
 				socket.emit('update', data);
 				socket.on('countdown', time=>{
-					room_countdown = time;
+					game.countdown = time;
 				});
 
 				socket.on('player_list', pl =>{
 				let index = pl.findIndex(element => element.id == socket.id);
 				game.other_players = pl;	
-				// console.log(pl);
-				// console.log(game.other_players);	
 				//game.other_players.splice(index,1);
-				
-					//game.render_other_players(ctx);
 				});
 			}
 
@@ -85,21 +101,9 @@ socket.on('connect', ()=>{
 			frame_time+= (this_frame_time - frame_time)/filter_str;
 			fps = 1000/(frame_time);
 			last_loop = this_loop;
-			
-			// console.log(this_frame_time);
-			// setTimeout(game_loop, frame_time);
-			
+			draw_fps();
 		}
 
 		setInterval(game_loop, 1000/30);
-		// game_loop();
-
-		//displaying fps counter on the bototm
-		setInterval(()=>{
-				fps_div.innerHTML = fps.toFixed(1);
-				time_div.innerHTML = room_countdown;
-
-		},1000);
-
 	};
 });
