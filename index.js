@@ -25,6 +25,16 @@ app.get('/make', (req,res) =>
 	{
 		//hash 
 		let new_id = id_maker.make_id();
+		for(const r in rooms)
+		{
+			if(r.id === new_id) 
+			{
+				while(r.id === new_id)
+				{
+					new_id = id_maker.make_id();
+				}
+			}
+		}
 
 		let room_name = 'room'+new_id;
 		let room_obj = new room(new_id, room_name, req.query.max);
@@ -85,8 +95,6 @@ io.on('connection', socket =>{
 			
 			socket.in('lobby').emit('update_rooms', rooms);
 		
-		
-
 	});
 
 	socket.in('game').on('update', data => {

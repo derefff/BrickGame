@@ -2,7 +2,7 @@ const socket = io.connect();
 socket.on('connect', ()=>{
 	socket.on('gtfo', ()=> {window.location = '/?gtfo=♥'});
 	socket.emit('joined_game');
-	window.onload = content;
+	window.addEventListener('load', content)
 	
 	function content()
 	{
@@ -34,7 +34,6 @@ socket.on('connect', ()=>{
 				// console.log(socket.connected);
 				//query value
 				const usp = new URLSearchParams(window.location.search).get("id");
-				console.log(typeof(usp))
 				_room="room"+usp;
 				//sending id/room name to the server
 				let data = { 
@@ -77,7 +76,7 @@ socket.on('connect', ()=>{
 				// console.log(game.other_players);	
 				//game.other_players.splice(index,1);
 				
-					game.render_other_players(ctx);
+					//game.render_other_players(ctx);
 				});
 			}
 

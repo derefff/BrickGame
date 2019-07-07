@@ -27,8 +27,9 @@ class Game{
 			this.s = false;
 			return true;
 		}
-	 }
-
+	}
+	
+	send_data() { return this.board.current_board; }
 
 	draw_hud(ctx)
 	{
@@ -45,25 +46,9 @@ class Game{
 		Misc.draw_matrix(ctx,this.tetromino.next_shape,15,0,0,220,60);
 	}
 
-	send_data() { return this.board.current_board; }
-
 
 	render_other_players(ctx)
 	{
-
-	}
-
-	render(ctx)
-	{
-		//drawing background #5b6856
-		ctx.clearRect(0,0,this.WIDTH,this.HEIGHT);
-		ctx.fillStyle='darkgrey';
-		ctx.strokeStyle = 'black';
-		ctx.fillRect(0,0, this.WIDTH, this.HEIGHT);
-
-		//drawing other things
-		this.board.render(ctx);
-
 		let x = 0;
 		let all_players = this.other_players.length-1;
 
@@ -79,11 +64,9 @@ class Game{
 				x%=5;
 
 				ctx.beginPath();
-				ctx.moveTo(310 + (board_width * x + 10), board_height * current_row);
-				ctx.lineTo(310 + (board_width * x + 10) + board_width, board_height * current_row);
-				ctx.lineTo(310 + (board_width * x + 10) + board_width, board_height * current_row + board_height);
-				ctx.lineTo(310 + (board_width * x + 10), board_height * current_row + board_height);
-				ctx.lineTo(310 + (board_width * x + 10), board_height * current_row);
+				ctx.strokeStyle = 'black';
+				// ctx.fillStyle = 'darkgray';
+				ctx.strokeRect(310+(board_width * x + 10), board_height * current_row, board_width, board_height);
 				ctx.stroke();
 				ctx.closePath();
 
@@ -101,7 +84,23 @@ class Game{
 				}
 				x++;
 			}
-				
+	}
+
+
+	render(ctx)
+	{
+		//drawing background #5b6856
+		ctx.clearRect(0,0,this.WIDTH,this.HEIGHT);
+		ctx.fillStyle='darkgray';
+		ctx.strokeStyle = 'black';
+		ctx.fillRect(0,0, this.WIDTH, this.HEIGHT);
+
+		//drawing other things
+		this.board.render(ctx);
+
+		//draw other players	
+		this.render_other_players(ctx);				
+
 		this.tetromino.draw(ctx);
 		this.draw_hud(ctx);
 		
