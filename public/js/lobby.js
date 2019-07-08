@@ -27,7 +27,7 @@ function display_rooms(room_arr){
 		[${room.state}]`;
 		
 		// console.log(room);
-		if(room.players.length < room.max_players || room.current_state !== "currently playing")  
+		if(room.players.length < room.max_players && room.current_state != "currently playing")  
 			current_room+=` <input type="button" name="btn" value="join" onclick="change_site('${room.id}')"> <br>`;
 
 		el.innerHTML+= current_room;

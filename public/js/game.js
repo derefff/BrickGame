@@ -15,7 +15,7 @@ class Game{
 
 		this.other_players = [];
 		this.id;
-		this.countdown;
+		this.countdown = "[]";
 
 		this.state_index = 0;
     this.states = ["waiting for players", "currently playing", "game has ended"];
@@ -62,18 +62,16 @@ class Game{
 	draw_countdown()
 	{
 			this.ctx.beginPath();
-			this.ctx.font = '4em Arial';
+			this.ctx.font = '2em Arial'
 			this.ctx.fillStyle = 'black';
-			this.ctx.fillText(`${this.countdown}`, 100, 480);
-			this.ctx.closePath();
-	}
-
-	draw_fps()
-	{
-			this.ctx.beginPath();
+			switch(this.state_index)
+			{
+				case 0: this.ctx.fillText("waiting for players", 20, 450);	break;
+				case 1: this.ctx.fillText("next wave in ", 45, 450);	break;
+				case 2: this.ctx.fillText("next game in ", 45, 450);	break;
+			}
 			this.ctx.font = '4em Arial';
-			this.ctx.fillStyle = 'black';
-			this.ctx.fillText(`${this.countdown}`, 100, 480);
+			this.ctx.fillText(`${this.countdown}`, 100, 510);
 			this.ctx.closePath();
 	}
 
@@ -100,7 +98,6 @@ class Game{
 				ctx.stroke();
 				ctx.closePath();
 
-
 				if(!this.other_players[i].alive)
 				{
 					Misc.draw_matrix(ctx,this.other_players[i].board,bs,0,0,310+(board_width*x+10),board_height*current_row);
@@ -117,23 +114,21 @@ class Game{
 	}
 
 
-	render(ctx)
+	render()
 	{
 		//drawing background #5b6856
-		ctx.clearRect(0,0,this.WIDTH,this.HEIGHT);
-		ctx.fillStyle='darkgray';
-		ctx.strokeStyle = 'black';
-		ctx.fillRect(0,0, this.WIDTH, this.HEIGHT);
+		this.ctx.clearRect(0,0,this.WIDTH,this.HEIGHT);
+		this.ctx.fillStyle='darkgray';
+		this.ctx.strokeStyle = 'black';
+		this.ctx.fillRect(0,0, this.WIDTH, this.HEIGHT);
 
 		//drawing other things
-		this.board.render(ctx);
+		this.board.render(this.ctx);
 
 		//draw other players	
-		this.render_other_players(ctx);				
-
-		this.tetromino.draw(ctx);
-		this.draw_hud(ctx);
-
+		this.render_other_players(this.ctx);				
+		this.tetromino.draw(this.ctx);
+		this.draw_hud(this.ctx);
 		this.draw_countdown();
 		
 	}

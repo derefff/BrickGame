@@ -10,8 +10,8 @@ socket.on('connect', ()=>{
 		console.info(socket.id);
 		/*---------------------*/
 		const canvas = document.getElementById('c');
-		const fps_div = document.querySelector('#fps');
-		const time_div = document.querySelector('#timer');
+		canvas.style.height = (window.innerHeight-10)+'px';
+		canvas.style.width = "auto";
 		const ctx = canvas.getContext('2d');
 		const WIDTH = c.width, HEIGHT = c.height;
 
@@ -76,7 +76,7 @@ socket.on('connect', ()=>{
 
 			if(init)
 			{
-				game.render(ctx);
+				game.render();
 				
 				let	data = {
 					id: socket.id,

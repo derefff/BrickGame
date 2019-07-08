@@ -1,10 +1,10 @@
 #c{
 /*	width:200px;
 	height:400px;	*/
-	border:2px solid black;
-	border-left:none;
+	border-right:2px solid black;
 }
 
 body{
 	background-color: darkgrey;
+	margin:0;
 }
