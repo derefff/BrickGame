@@ -5,6 +5,7 @@ const http = require('http');
 const server = http.createServer(app);
 const io = require('socket.io')(server);
 const room = require('./lib/room');
+const player = require('./lib/player');
 const id_maker = require('./lib/id_maker');
 
 const port = process.env.PORT || 3000;
@@ -74,12 +75,8 @@ io.on('connection', socket =>{
 			{
 				if(!rooms[i].is_maxed_out())
 				{
-					rooms[i].players.push(
-						{ id:socket.id,
-							room: data.room,
-							alive:null,
-							board:null
-						});
+					let p = new player(socket.id, data.room)
+					rooms[i].players.push(p);
 
 					// console.log(data.room, rooms[i].players.room);
 					socket.in('game').join(rooms[i].name);
@@ -119,6 +116,41 @@ io.on('connection', socket =>{
 
 	socket.on('disconnect',()=>{
 		console.log(`user ${socket.id} has disconnected`);
+		for(const r of rooms)
+		{
+			for(let p of r.players)
+			{
+				if(socket.id === p.id) p.leave = true; 
+
+				if(r.current_state === "waiting for players")
+				{
+					r.players.splice(r.players.indexOf(p),1);
+					if(r.is_empty())
+					{
+						rooms.splice(rooms.indexOf(r),1);
+						socket.in('lobby').emit('update_rooms', rooms);
+					}
+				}
+				else if(r.current_state === "currently playing")
+				{
+					// i kno doesn't make sense
+					p.alive = true;
+					socket.to(r.name).emit('player_list', r.players);
+					if(r.is_empty())
+					{
+						rooms.splice(rooms.indexOf(r),1);
+						socket.in('lobby').emit('update_rooms', rooms);
+					}
+				}
+				else if(r.current_state === "game has ended")
+				{
+
+					//don't know yet what to do here 
+					//socket.to(r.name).emit('player_list', r.players);
+				}
+
+			}
+		}
 		socket.leaveAll();
 		//leaving depends on the current state of a game
 		//set data of this player to "game over"

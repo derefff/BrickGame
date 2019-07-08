@@ -55,7 +55,8 @@ class Game{
 		ctx.font = '0.9em Arial';
 		ctx.fillText('next shape', 205, 55);
 		ctx.closePath();
-
+		ctx.strokeStyle ='black';
+		ctx.fillStyle ='black';
 		Misc.draw_matrix(ctx,this.tetromino.next_shape,15,0,0,220,60);
 	}
 
@@ -98,16 +99,22 @@ class Game{
 				ctx.stroke();
 				ctx.closePath();
 
-				if(!this.other_players[i].alive)
+				if(this.other_players[i].alive)
 				{
+					ctx.strokeStyle = "gray";
+					ctx.fillStyle = "gray";
 					Misc.draw_matrix(ctx,this.other_players[i].board,bs,0,0,310+(board_width*x+10),board_height*current_row);
+					ctx.beginPath();
+					ctx.font = "18px Georgia";
+					ctx.fillStyle = "black";
+					ctx.fillText("Player has lost!",310 + (board_width * x + board_width / 2 -50 ), board_height * current_row + board_height/2);
+					ctx.closePath();
 				}
 				else
 				{
-					ctx.beginPath();
-					ctx.font = "18px Georgia";
-					ctx.fillText("Player has lost!",310 + (board_width * x + board_width / 2 -50 ), board_height * current_row + board_height/2);
-					ctx.closePath();
+					ctx.strokeStyle = "black";
+					ctx.fillStyle = "black";
+					Misc.draw_matrix(ctx,this.other_players[i].board,bs,0,0,310+(board_width*x+10),board_height*current_row);
 				}
 				x++;
 			}

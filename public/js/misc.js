@@ -34,15 +34,12 @@ class Misc
 				ctx.beginPath();
 				if(mx[i][j] === 1) 
 				{
-					ctx.strokeStyle = "black";
-					ctx.fillStyle = "black";
 					ctx.strokeRect((x*w)+(j*w)+g+ofX, (y*w)+(i*w)+g+ofY,w-g,w-g);
 					ctx.fillRect((x*w)+(j*w)+g+ofX+(w/4),(y*w)+(i*w)+g+ofY+(w/4),w*0.35,w*0.35);
 				}
 
 				if(mx[i][j] === 2) 
 				{
-					ctx.strokeStyle = "black";
 					ctx.strokeRect((x*w)+(j*w)+g+ofX, (y*w)+(i*w)+g+ofY,w-g,w-g);
 					ctx.moveTo((x*w)+(j*w)+2*g+ofX, (y*w)+(i*w)+2*g+ofY);
 					ctx.lineTo((x*w)+(j*w)+ofX+w-g,(y*w)+(i*w)+ofY+w-g);

@@ -93,6 +93,8 @@ class Element
 
 	draw(ctx) 
 	{ 
+		ctx.fillStyle = 'black';
+		ctx.strokeStyle = 'black';
 		Misc.draw_matrix(ctx,this.current_shape,this.width,this.x,this.y,this.offsetX,this.offsetY);
 	}
 

@@ -60,6 +60,7 @@ socket.on('connect', ()=>{
 			if(!playing)
 			{	
 				// socket.on("change_state", () =>{});
+				if(socket.disconnected) playing = true;
 				if(game.state == "waiting for players")
 				{
 					if(game.countdown == 0) game.change_state();
