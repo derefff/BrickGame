@@ -79,13 +79,18 @@ socket.on('connect', ()=>{
 			{
 				game.render();
 				
-				let	data = {
-					id: socket.id,
-					alive: playing,
-					room: _room,
-					board: game.send_data() };
+				
+				if(game.state  == "currently playing") 
+				{
+					let	data = {
+						id: socket.id,
+						alive: playing,
+						room: _room,
+						board: game.send_data() };
 
-				socket.emit('update', data);
+					socket.emit('update', data);
+				}
+
 				socket.on('countdown', time=>{
 					game.countdown = time;
 				});

@@ -12,7 +12,6 @@ const port = process.env.PORT || 3000;
 
 server.listen(port, ()=> console.log(`server listening on ${port}`));
 
-const players = [];
 const rooms = [];
 
 app.use(express.static('public'));
@@ -77,7 +76,7 @@ io.on('connection', socket =>{
 				{
 					let p = new player(socket.id, data.room)
 					rooms[i].players.push(p);
-
+					
 					// console.log(data.room, rooms[i].players.room);
 					socket.in('game').join(rooms[i].name);
 					//socket.in('lobby').emit('update_rooms', rooms);
@@ -122,16 +121,17 @@ io.on('connection', socket =>{
 			{
 				if(socket.id === p.id) p.leave = true; 
 
-				if(r.current_state === "waiting for players")
+				if(r.current_state === "waiting for players" && socket.id === p.id)
 				{
-					r.players.splice(r.players.indexOf(p),1);
-					if(r.is_empty())
-					{
-						rooms.splice(rooms.indexOf(r),1);
-						socket.in('lobby').emit('update_rooms', rooms);
-					}
-				}
-				else if(r.current_state === "currently playing")
+						r.players.splice(r.players.indexOf(p),1);
+						if(r.is_empty())
+						{
+							rooms.splice(rooms.indexOf(r),1);
+							socket.in('lobby').emit('update_rooms', rooms);
+						}
+					
+				} 
+				else  if(r.current_state === "currently playing")
 				{
 					// i kno doesn't make sense
 					p.alive = true;
