@@ -29,7 +29,7 @@ class Board
 		check: for(let i = this.data.length-1; i > 0; i--)
 		{
 			for(let j = 0; j< this.data[i].length; j++)
-				if(this.data[i][j] === 0) 
+				if(this.data[i][j] === 0 || this.data[i][j] === 2) 
 					continue check;
 
 			this.current_board.splice(i,1);
@@ -50,8 +50,10 @@ class Board
 
 	lock_row()
 	{
-		//make solid elements on the bottom of a board
-
+		//delete first from the top line
+		this.current_board.shift();
+		//make solid elements on the bottom of the board
+		this.current_board.push([2,2,2,2,2,2,2,2,2,2]);
 	}
 
 }

@@ -74,7 +74,6 @@ class Element
 
 	rotate()
 	{
-		let temp = this.current_shape;
 		this.current_shape = Misc.rotate_matrix(this.current_shape);
 	}
 
@@ -85,7 +84,9 @@ class Element
 
 		for(let i = 0; i < al; i++)
 			for(let j = 0; j < al; j++)
-				if(this.current_shape[i][j] && (board_data[this.y + i] && board_data[this.y +i][this.x+j]) !==0) 
+				if(this.current_shape[i][j] &&
+					 (board_data[this.y + i] && board_data[this.y +i][this.x+j]) !== 0 
+					 && board_data[this.y + i] !== 2) 
 					return true;
 
 		return false;
@@ -96,6 +97,11 @@ class Element
 		ctx.fillStyle = 'black';
 		ctx.strokeStyle = 'black';
 		Misc.draw_matrix(ctx,this.current_shape,this.width,this.x,this.y,this.offsetX,this.offsetY);
+	}
+
+	go_one_up()
+	{
+		if(this.y != 0) this.y-=2;
 	}
 
 }

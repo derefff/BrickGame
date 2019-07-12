@@ -19,6 +19,7 @@ socket.on('connect', ()=>{
 		let playing = false;
 		let init = false;
 		let _room="";
+		let trigger_once; //!REFACTOR	
 
 		//stolen code from stack overflow
 		let last_loop = Date.now();
@@ -64,12 +65,26 @@ socket.on('connect', ()=>{
 				if(game.state == "waiting for players")
 				{
 					if(game.countdown == 0) game.change_state();
+					trigger_once = true;
 				}
 			
 
 				if(game.state == "currently playing")
 				{
-					game.update();
+					
+					if(game.countdown == 0) 
+					{
+						if(!trigger_once) 
+						{
+							game.make_harder();
+							trigger_once = true;
+						}
+					}
+					else 
+					{
+						game.update();
+						trigger_once = false;
+					}
 				}
 
 				playing = game.is_playing();

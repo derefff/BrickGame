@@ -140,9 +140,10 @@ class Game{
 		
 	}
 
-	make_game_harder()
+	make_harder()
 	{
-		
+		this.tetromino.go_one_up();
+		this.board.lock_row();
 	}
 
 	update()
