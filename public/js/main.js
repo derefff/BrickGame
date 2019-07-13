@@ -19,7 +19,7 @@ socket.on('connect', ()=>{
 		let playing = false;
 		let init = false;
 		let _room="";
-		let trigger_once; //!REFACTOR	
+		let trigger_once;
 
 		//stolen code from stack overflow
 		let last_loop = Date.now();
@@ -30,19 +30,17 @@ socket.on('connect', ()=>{
 		
 		function draw_fps()
 		{
-				ctx.beginPath();
-				ctx.font = '1em Arial';
-				ctx.fillStyle = 'black';
-				ctx.fillText(`${fps.toFixed(1)} fps`, 5, HEIGHT - 10);
-				ctx.closePath();
+			ctx.beginPath();
+			ctx.font = '1em Arial';
+			ctx.fillStyle = 'black';
+			ctx.fillText(`${fps.toFixed(1)} fps`, 5, HEIGHT - 10);
+			ctx.closePath();
 		}
 
 		function game_loop(){
 			
-
 			if(!init)
 			{
-				// console.log(socket.connected);
 				//query value
 				const usp = new URLSearchParams(window.location.search).get("id");
 				_room="room"+usp;
@@ -52,6 +50,14 @@ socket.on('connect', ()=>{
 					room: 'room'+usp
 				}
 				socket.emit('init', data);
+				socket.on('get_room_state', data =>
+				{
+					for(const s in game.states)
+						if(data == game.states[s])
+							game.state_index = s;
+						
+					game.update_state();
+				})
 
 				console.log(data.room);
 				game.id = socket.id;
@@ -71,7 +77,6 @@ socket.on('connect', ()=>{
 
 				if(game.state == "currently playing")
 				{
-					
 					if(game.countdown == 0) 
 					{
 						if(!trigger_once) 
@@ -94,7 +99,6 @@ socket.on('connect', ()=>{
 			{
 				game.render();
 				
-				
 				if(game.state  == "currently playing") 
 				{
 					let	data = {
@@ -111,9 +115,7 @@ socket.on('connect', ()=>{
 				});
 
 				socket.on('player_list', pl =>{
-				let index = pl.findIndex(element => element.id == socket.id);
-				game.other_players = pl;	
-				//game.other_players.splice(index,1);
+					game.other_players = pl;	
 				});
 			}
 

@@ -20,28 +20,18 @@ class Game{
 		this.state_index = 0;
     this.states = ["waiting for players", "currently playing", "game has ended"];
     this.state = this.states[this.state_index % 3];
-		/*waiting for players -> 1 min countdown
-    currently playing ->  1min countdown interval  | also time limit here 
-    game has ended */
-		this.s = false;
 	}
 
 	is_playing(){return this.stop_playing;}
+	
+	send_data() { return this.board.current_board;}
+	
+	update_state(){this.state = this.states[this.state_index % 3];}
 
-	send(){
-		if(this.s)
-		{
-			this.s = false;
-			return true;
-		}
-	}
-	
-	send_data() { return this.board.current_board; }
-	
 	change_state()
 	{
 		this.state_index++;
-		this.state = this.states[this.state_index % 3];
+		this.update_state();
 	}
 
 	draw_hud(ctx)
@@ -51,9 +41,9 @@ class Game{
 		ctx.moveTo(201,0);
 		ctx.lineTo(201, 400);
 		ctx.stroke();
-		ctx.fillStyle = '#000';
+		/* ctx.fillStyle = '#000';
 		ctx.font = '0.9em Arial';
-		ctx.fillText('next shape', 205, 55);
+		ctx.fillText('next shape', 205, 55); */
 		ctx.closePath();
 		ctx.strokeStyle ='black';
 		ctx.fillStyle ='black';
@@ -160,7 +150,6 @@ class Game{
 				this.board.add_tetromino(this.tetromino);
 				this.board.check_rows();
 				this.tetromino.dead();
-				this.s = true;
 			}
 			this.tick = 0;
 		}

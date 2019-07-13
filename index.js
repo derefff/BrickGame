@@ -16,8 +16,7 @@ const rooms = [];
 
 app.use(express.static('public'));
 
-app.get('/', (req,res) =>
-	{
+app.get('/', (req,res) => {
 		res.sendFile(__dirname+"/index.html");
 	});
 
@@ -28,12 +27,7 @@ app.get('/make', (req,res) =>
 		for(const r in rooms)
 		{
 			if(r.id === new_id) 
-			{
-				while(r.id === new_id)
-				{
-					new_id = id_maker.make_id();
-				}
-			}
+				while(r.id === new_id) {new_id = id_maker.make_id()}
 		}
 
 		let room_name = 'room'+new_id;
@@ -41,7 +35,6 @@ app.get('/make', (req,res) =>
 
 		rooms.push(room_obj);
 		res.redirect('/game?id='+rooms[rooms.length-1].id);
-
 	});
 
 app.get('/game', (req,res) =>
@@ -77,15 +70,12 @@ io.on('connection', socket =>{
 					let p = new player(socket.id, data.room)
 					rooms[i].players.push(p);
 					
-					// console.log(data.room, rooms[i].players.room);
 					socket.in('game').join(rooms[i].name);
-					//socket.in('lobby').emit('update_rooms', rooms);
+					socket.in(rooms[i].name).emit("get_room_state",rooms[i].current_state);
+					socket.in('lobby').emit('update_rooms', rooms);
 					console.info('init');
 				}
-				else
-				{
-					socket.emit('gtfo');
-				}
+				else socket.emit('gtfo');
 
 			}
 			
@@ -115,6 +105,7 @@ io.on('connection', socket =>{
 
 	socket.on('disconnect',()=>{
 		console.log(`user ${socket.id} has disconnected`);
+		//leaving depends on the current state of a game
 		for(const r of rooms)
 		{
 			for(let p of r.players)
@@ -152,9 +143,6 @@ io.on('connection', socket =>{
 			}
 		}
 		socket.leaveAll();
-		//leaving depends on the current state of a game
-		//set data of this player to "game over"
-
 	});
 });
 
@@ -167,10 +155,10 @@ function update_room_timer(){
 		io.to(room.name).emit("countdown", room.game_countdown);
 		if(room.flag_update_state)
 		{
-			io.sockets.to("lobby").emit('update_rooms', rooms);
 			io.to(room.name).emit('change_state');
 			room.flag_update_state = false;
 		}
+		io.in("lobby").emit('update_rooms', rooms);
 	}
 }
 setInterval(update_room_timer,1000);
