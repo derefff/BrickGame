@@ -1,5 +1,5 @@
 const express = require('express');
-const path = require('path');
+//const path = require('path');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
@@ -135,9 +135,12 @@ io.on('connection', socket =>{
 				}
 				else if(r.current_state === "game has ended")
 				{
-
-					//don't know yet what to do here 
-					//socket.to(r.name).emit('player_list', r.players);
+					r.players.splice(r.players.indexOf(p),1);
+						if(r.is_empty())
+						{
+							rooms.splice(rooms.indexOf(r),1);
+							socket.in('lobby').emit('update_rooms', rooms);
+						}
 				}
 
 			}

@@ -55,7 +55,7 @@ class Game{
 			this.ctx.beginPath();
 			this.ctx.font = '2em Arial'
 			this.ctx.fillStyle = 'black';
-			switch(this.state_index)
+			switch(this.state_index % 3)
 			{
 				case 0: this.ctx.fillText("waiting for players", 20, 450);	break;
 				case 1: this.ctx.fillText("next wave in ", 45, 450);	break;
