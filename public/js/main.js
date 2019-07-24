@@ -33,7 +33,7 @@ socket.on('connect', ()=>{
 			ctx.beginPath();
 			ctx.font = '1em Arial';
 			ctx.fillStyle = 'black';
-			ctx.fillText(`${fps.toFixed(1)} fps`, 5, HEIGHT - 10);
+			ctx.fillText(`${fps.toFixed(0)} fps`, 5, HEIGHT - 10);
 			ctx.closePath();
 		}
 
@@ -66,11 +66,9 @@ socket.on('connect', ()=>{
 
 			if(!playing)
 			{	
-				// socket.on("change_state", () =>{});
 				if(socket.disconnected) playing = true;
 				if(game.state == "waiting for players")
 				{
-					if(game.countdown == 0) game.change_state();
 					trigger_once = true;
 				}
 			
@@ -93,6 +91,7 @@ socket.on('connect', ()=>{
 				}
 
 				playing = game.is_playing();
+				if(playing) socket.emit("get_player_place", _room)
 			}
 
 			if(init)
@@ -109,9 +108,14 @@ socket.on('connect', ()=>{
 
 					socket.emit('update', data);
 				}
+				socket.on('countdown', data =>{
+					game.countdown = data.countdown;
 
-				socket.on('countdown', time=>{
-					game.countdown = time;
+					for(const s in game.states)
+						if(data.state == game.states[s])
+							game.state_index = s;
+						
+					game.update_state();
 				});
 
 				socket.on('player_list', pl =>{

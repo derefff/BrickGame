@@ -84,7 +84,6 @@ class Game{
 
 				ctx.beginPath();
 				ctx.strokeStyle = 'black';
-				// ctx.fillStyle = 'darkgray';
 				ctx.strokeRect(310+(board_width * x + 10), board_height * current_row, board_width, board_height);
 				ctx.stroke();
 				ctx.closePath();
@@ -98,6 +97,9 @@ class Game{
 					ctx.font = "18px Georgia";
 					ctx.fillStyle = "black";
 					ctx.fillText("Player has lost!",310 + (board_width * x + board_width / 2 -50 ), board_height * current_row + board_height/2);
+					ctx.font = "36px Arial";
+					if(this.other_players[i].place)
+						ctx.fillText(`#${this.other_players[i].place}`,310 + (board_width * x + board_width / 2 - 15 ), board_height * current_row + board_height/2 + 38);
 					ctx.closePath();
 				}
 				else

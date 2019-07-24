@@ -61,6 +61,16 @@ io.on('connection', socket =>{
 		socket.in('lobby').emit('update_rooms', rooms);
 	});
 
+	socket.in('game').on('get_player_place', room_name =>{
+		for(const room of rooms)
+			if(room.name == room_name)
+			{
+				for(const p in room.players)
+					if(socket.id == p.id)
+						p.place = room.in_play()+1;
+			}
+	})
+
 	socket.in('game').on('init', data => {
 		for(let i = 0;  i < rooms.length; i++)
 			if(rooms[i].name == data.room)
@@ -76,7 +86,6 @@ io.on('connection', socket =>{
 					console.info('init');
 				}
 				else socket.emit('gtfo');
-
 			}
 			
 			socket.in('lobby').emit('update_rooms', rooms);
@@ -155,7 +164,8 @@ function update_room_timer(){
 	{
 		room.update_countdown();
 		room.tick();
-		io.to(room.name).emit("countdown", room.game_countdown);
+		let data = {countdown:room.game_countdown, state:room.current_state}
+		io.to(room.name).emit("countdown", data );
 		if(room.flag_update_state)
 		{
 			io.to(room.name).emit('change_state');
