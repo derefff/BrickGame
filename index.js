@@ -62,13 +62,7 @@ io.on('connection', socket =>{
 	});
 
 	socket.in('game').on('get_player_place', room_name =>{
-		for(const room of rooms)
-			if(room.name == room_name)
-			{
-				for(const p in room.players)
-					if(socket.id == p.id)
-						p.place = room.in_play()+1;
-			}
+		assign_player_palce_unk(room_name, socket);
 	})
 
 	socket.in('game').on('init', data => {
@@ -119,7 +113,7 @@ io.on('connection', socket =>{
 		{
 			for(let p of r.players)
 			{
-				if(socket.id === p.id) p.leave = true; 
+				if(socket.id === p.id) p.leaved = true; 
 
 				if(r.current_state === "waiting for players" && socket.id === p.id)
 				{
@@ -131,10 +125,12 @@ io.on('connection', socket =>{
 						}
 					
 				} 
-				else  if(r.current_state === "currently playing")
+				else if(r.current_state === "currently playing")
 				{
 					// i kno doesn't make sense
 					p.alive = true;
+					//not working ;_;
+					assign_player_palce_kn(p,r);
 					socket.to(r.name).emit('player_list', r.players);
 					if(r.is_empty())
 					{
@@ -158,6 +154,19 @@ io.on('connection', socket =>{
 	});
 });
 
+//assigning while unknowing the room / player etc
+function assign_player_palce_unk(room_name, socket)
+{
+	for(const room of rooms)
+		if(room.name == room_name)
+			for(const player of room.players)
+				if(socket.id == player.id)
+				{
+					player.place = room.in_play()+1;
+					// console.log(room.in_play()+ "<-");
+				}
+}
+function assign_player_palce_kn(player, room) {player.place = room.in_play()+2}
 
 function update_room_timer(){
 	for(let room of rooms)

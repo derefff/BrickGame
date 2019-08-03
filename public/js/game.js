@@ -15,7 +15,7 @@ class Game{
 
 		this.other_players = [];
 		this.id;
-		this.countdown = "[]";
+		this.countdown = "placeholder";
 
 		this.state_index = 0;
     this.states = ["waiting for players", "currently playing", "game has ended"];
@@ -62,7 +62,7 @@ class Game{
 				case 2: this.ctx.fillText("next game in ", 45, 450);	break;
 			}
 			this.ctx.font = '4em Arial';
-			this.ctx.fillText(`${this.countdown}`, 100, 510);
+			if(this.countdown !== "placeholder")this.ctx.fillText(`${this.countdown}`, 100, 510);
 			this.ctx.closePath();
 	}
 

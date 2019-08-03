@@ -91,11 +91,11 @@ socket.on('connect', ()=>{
 				}
 
 				playing = game.is_playing();
-				if(playing) socket.emit("get_player_place", _room)
 			}
-
+			
 			if(init)
 			{
+				if(playing) socket.emit("get_player_place", _room)
 				game.render();
 				
 				if(game.state  == "currently playing") 
