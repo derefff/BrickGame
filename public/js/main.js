@@ -2,7 +2,7 @@ const socket = io.connect();
 socket.on('connect', ()=>{
 	socket.on('gtfo', ()=> {window.location = '/?gtfo=♥'});
 	socket.emit('joined_game');
-	window.addEventListener('load', content)
+	window.addEventListener('load', content);
 	
 	function content()
 	{
@@ -39,6 +39,10 @@ socket.on('connect', ()=>{
 
 		function game_loop(){
 			
+			socket.on('end_game', ()=> {
+				window.location = '/?game_is_over';
+			});
+
 			if(!init)
 			{
 				//query value

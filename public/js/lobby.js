@@ -26,7 +26,7 @@ function display_rooms(room_arr){
 		where ${room.players.length} / ${room.max_players} players 
 		[${room.state}]`;
 		
-		if(room.players.length < room.max_players && room.state != "currently playing") 
+		if(room.players.length < room.max_players && room.state != "currently playing" && room.state != "game has ended") 
 			current_room+=` <input type="button" name="btn" value="join" onclick="change_site('${room.id}')"> <br>`;
 		else 
 			current_room+='<br>';

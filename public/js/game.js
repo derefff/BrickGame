@@ -59,7 +59,7 @@ class Game{
 			{
 				case 0: this.ctx.fillText("waiting for players", 20, 450);	break;
 				case 1: this.ctx.fillText("next wave in ", 45, 450);	break;
-				case 2: this.ctx.fillText("next game in ", 45, 450);	break;
+				case 2: this.ctx.fillText("game has ended ", 45, 450);	break;
 			}
 			this.ctx.font = '4em Arial';
 			if(this.countdown !== "placeholder")this.ctx.fillText(`${this.countdown}`, 100, 510);

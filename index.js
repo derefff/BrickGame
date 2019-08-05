@@ -171,15 +171,17 @@ function assign_player_palce_kn(player, room) {player.place = room.in_play()+2}
 function update_room_timer(){
 	for(let room of rooms)
 	{
+		if(room.end_game) io.in(room.name).emit("end_game");
+		
 		room.update_countdown();
 		room.tick();
+
 		let data = {countdown:room.game_countdown, state:room.current_state}
 		io.to(room.name).emit("countdown", data );
+
 		if(room.flag_update_state)
-		{
-			io.to(room.name).emit('change_state');
 			room.flag_update_state = false;
-		}
+
 		io.in("lobby").emit('update_rooms', rooms);
 	}
 }
