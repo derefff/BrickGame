@@ -3,7 +3,8 @@ socket.on('connect', ()=>{
 	socket.on('gtfo', ()=> {window.location = '/?gtfo=♥'});
 	socket.emit('joined_game');
 	window.addEventListener('load', content);
-	
+	window.addEventListener('resize', resize_canvas);
+
 	function content()
 	{
 		console.info("canvas loaded: game started");
@@ -137,4 +138,15 @@ socket.on('connect', ()=>{
 
 		setInterval(game_loop, 1000/30);
 	};
+
+	function resize_canvas()
+	{
+		let canvas = document.getElementById('c');
+		if(canvas)
+		{
+			canvas.style.height = (window.innerHeight-10)+'px';
+			canvas.style.width = 'auto';
+			console.log("resize");
+		}
+	}
 });
