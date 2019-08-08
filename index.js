@@ -62,7 +62,11 @@ io.on('connection', socket =>{
 	});
 
 	socket.in('game').on('get_player_place', room_name =>{
-		assign_player_palce_unk(room_name, socket);
+		for(const room of rooms)
+			if(room.name == room_name)
+				for(const player of room.players)
+					if(socket.id == player.id)
+						assign_player_place(player, room);
 	})
 
 	socket.in('game').on('init', data => {
@@ -113,60 +117,57 @@ io.on('connection', socket =>{
 		{
 			for(let p of r.players)
 			{
-				if(socket.id === p.id) p.leaved = true; 
-
-				if(r.current_state === "waiting for players" && socket.id === p.id)
+				if(socket.id === p.id) 
 				{
-						r.players.splice(r.players.indexOf(p),1);
+					p.leaved = true; 
+
+					if(r.current_state === "waiting for players" && socket.id === p.id)
+					{
+							r.players.splice(r.players.indexOf(p),1);
+							if(r.is_empty())
+							{
+								rooms.splice(rooms.indexOf(r),1);
+								socket.in('lobby').emit('update_rooms', rooms);
+							}
+						
+					} 
+					else if(r.current_state === "currently playing")
+					{
+						// i kno doesn't make sense
+						p.alive = true;
+						//not working ;_;
+						assign_player_place(p,r);
+						socket.to(r.name).emit('player_list', r.players);
 						if(r.is_empty())
 						{
 							rooms.splice(rooms.indexOf(r),1);
 							socket.in('lobby').emit('update_rooms', rooms);
 						}
-					
-				} 
-				else if(r.current_state === "currently playing")
-				{
-					// i kno doesn't make sense
-					p.alive = true;
-					//not working ;_;
-					assign_player_palce_kn(p,r);
-					socket.to(r.name).emit('player_list', r.players);
-					if(r.is_empty())
+					}
+					else if(r.current_state === "game has ended")
 					{
-						rooms.splice(rooms.indexOf(r),1);
-						socket.in('lobby').emit('update_rooms', rooms);
+						r.players.splice(r.players.indexOf(p),1);
+							if(r.is_empty())
+							{
+								rooms.splice(rooms.indexOf(r),1);
+								socket.in('lobby').emit('update_rooms', rooms);
+							}
 					}
 				}
-				else if(r.current_state === "game has ended")
-				{
-					r.players.splice(r.players.indexOf(p),1);
-						if(r.is_empty())
-						{
-							rooms.splice(rooms.indexOf(r),1);
-							socket.in('lobby').emit('update_rooms', rooms);
-						}
-				}
-
 			}
 		}
 		socket.leaveAll();
 	});
 });
 
-//assigning while unknowing the room / player etc
-function assign_player_palce_unk(room_name, socket)
+function assign_player_place(player, room)
 {
-	for(const room of rooms)
-		if(room.name == room_name)
-			for(const player of room.players)
-				if(socket.id == player.id)
-				{
-					player.place = room.in_play()+1;
-					// console.log(room.in_play()+ "<-");
-				}
+	if(!player.place)
+	{
+		player.place = room.get_latest_place();
+		room.dead_players_counter++;
+	}
 }
-function assign_player_palce_kn(player, room) {player.place = room.in_play()+2}
 
 function update_room_timer(){
 	for(let room of rooms)
