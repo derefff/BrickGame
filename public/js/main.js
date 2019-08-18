@@ -1,9 +1,13 @@
 const socket = io.connect();
+let run = false;
+window.addEventListener('DOMContentLoaded', ()=>{run = true;});
 socket.on('connect', ()=>{
 	socket.on('gtfo', ()=> {window.location = '/?gtfo=♥'});
 	socket.emit('joined_game');
-	window.addEventListener('load', content);
+
 	window.addEventListener('resize', resize_canvas);
+
+	if(run) content();
 
 	function content()
 	{

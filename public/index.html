@@ -4,29 +4,37 @@
 	<meta charset="UTF-8">
 	<title>Brick Game | create/join game</title>
 
+	<link type="text/css" rel="stylesheet" href="css/lobbySS.css">
+
 	<!--js-->
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="js/lobby.js"></script>
 </head>
 <body>
-	<!--creating game-->	
-	<form action="/make" method="get">
-
-		max players <input id="max-players-btn" name="max" type="number" value="2" min="2" max="15">
-		<br>
-		<input type="submit" id="create-room" value="create room">
-	</form>
-
-	<fieldset>
-		<legend>
-		current rooms
-		</legend>
-
-		<div id="rooms">
-			<!--joining to the game-->	
+	<section id="container">
+		<!--creating game-->	
+		<div id="create-game-form">
+			<form action="/make" method="get">
+				<div id="info-par">
+					you can create your own game room <br> just set max. number(2-15) of players <br>
+				</div>
+				<div id="inputs">
+					<input id="max-players-btn" name="max" type="number" value="2" min="2" max="15">
+					<input type="submit" id="create-room" value="create room">
+				</div>
+			</form>
 		</div>
-	</fieldset>
 
+		<fieldset id="room-list">
+			<legend>
+			current rooms
+			</legend>
 
+			<div id="rooms">
+				<!--joining to the game-->	
+			</div>
+		</fieldset>
+
+</section>
 </body>
 </html>
